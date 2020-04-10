@@ -6,21 +6,56 @@ use GenerateEntity\AdminUtils;
 class DoctrineTemplate
 { 
     private $colData;
+    private $parentName;
+    private $tableName;
+
     const DATATYPES = [
         'varchar' => 'string',
         'char' => 'string',
         'int' => 'integer',
         'datetime' => 'Carbon',
-        'date' => 'fmt',
+        'date' => 'Carbon',
+        'tinyint' => 'boolean',
+        'longtext' => 'string'
     ];
 
-    function __construct( $table) {
-        print "In DoctineTemplate {$table}\n";
+    const DATATYPE_MAPPING = [
+        'varchar' => 'string',
+        'char' => 'string',
+        'int' => 'integer',
+        'datetime' => 'dateTime',
+        'date' => 'date',
+        'tinyint' => 'boolean',
+        'longtext' => 'text'
+    ];
+    function __construct( $parentName) {
+        $this->parentName = $parentName;
+    }
+
+    public function setParentName( $parentName)
+    {
+        $this->parentName = $parentName;
+    }
+    public function setTableName( $tableName)
+    {
+        $this->tableName = $tableName;
+    }
+
+    public function getClassName( $tableName)
+    {
+        return self::toCamelCase($tableName);
     }
 
     public function setColData( $colData)
     {
         $this->colData = $colData;
+    }
+
+    public function filterColumns( $colData) {
+        $keys = ['COLUMN_NAME', 'DATA_TYPE', 'COLUMN_DEFAULT', 'IS_NULLABLE', 'CHARACTER_MAXIMUM_LENGTH'];
+        $cols = array_map( fn($d) => array_values(array_filter( $d, fn($k) => in_array($k, $keys), ARRAY_FILTER_USE_KEY)), $colData);
+        var_dump($cols);
+        return $cols;
     }
 
     private function getGetter( $colName)
@@ -38,7 +73,7 @@ class DoctrineTemplate
     }
     public function genProperties()
     {
-        $fmt = "%8sprotected %s \$%s;";
+        $fmt = "%4sprotected %s \$%s;";
         $props = array_map( fn($col) => sprintf( $fmt, '', self::DATATYPES[$col['DATA_TYPE']], self::toCamelCase( $col['COLUMN_NAME'], true)) , $this->colData);
         return implode( "\n", $props);
     }
@@ -50,8 +85,12 @@ class DoctrineTemplate
         return implode( "\n", $methods);
     }
 
+    /**
+     * Entity
+     */
     public function genEntity( $tableName)
     {
+        $parentName = $this->parentName;
         $entityName = self::toCamelCase($tableName);
         $methods = $this->genMethodsComments();
         $props = $this->genProperties();
@@ -59,7 +98,7 @@ class DoctrineTemplate
         $template = <<<EOT
 <?php
 
-namespace Domain\{$entityName}\Entities;
+namespace Domain\$parentName\Entities;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -71,15 +110,121 @@ use Illuminate\Support\Collection;
 */
 class $entityName
 {
+    use GettersAndSetters;
     use TimestampableEntity;
 
-    {$props}
+{$props}
 }
 
 EOT;
-        return $template;
+        $bs = chr(92);
+        return str_replace( "$bs$bs", $bs, $template);
     }
 
+
+    /**
+     * Entity
+     */
+    public function genEntityDTO( $tableName)
+    {
+        $parentName = $this->parentName;
+        $entityName = self::toCamelCase($tableName) . 'DTO';
+        $methods = $this->genMethodsComments();
+        $props = $this->genProperties();
+
+        $template = <<<EOT
+<?php
+
+namespace Domain\$parentName\DTO;
+
+use Carbon\Carbon;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Illuminate\Support\Collection;
+
+/**
+{$methods}
+*/
+class $entityName
+{
+    use GettersAndSetters;
+    use TimestampableEntity;
+
+{$props}
+}
+
+EOT;
+        $bs = chr(92);
+        return str_replace( "$bs$bs", $bs, $template);
+    }
+
+
+    /**
+     * Mappings
+     */
+    private function getMappingEntries()
+    {
+        $line = array_map( fn($col) => sprintf( "%8s%s;", '', $this->getMappingEntry( $col)) , $this->colData);
+        return implode( "\n", $line);
+    }
+
+    private function getMappingEntry( $col)
+    {
+        $retval = '$builder->';
+        // if( $col['COLUMN_NAME'] == 'id' || 
+        if( $col['EXTRA'] == 'auto_increment') {
+            $retval .= 'increments';
+        } else {
+            $retval .= self::DATATYPE_MAPPING[$col['DATA_TYPE']];
+        }
+        if( $col['CHARACTER_MAXIMUM_LENGTH']) {
+            $retval .= "->length({$col['CHARACTER_MAXIMUM_LENGTH']})";
+        }
+        if( $col['COLUMN_DEFAULT']) {
+            $retval .= "->default('{$col['COLUMN_DEFAULT']}')";
+        }
+        if( $col['IS_NULLABLE'] == 'YES') {
+            $retval .= "->nullable()";
+        }
+        return $retval;
+    }
+
+    public function genMappings()
+    {
+        $mappingEntries = $this->getMappingEntries();
+        $className = self::toCamelCase($this->colData[0]['TABLE_NAME']);
+        $template =<<<EOT
+<?php
+
+namespace Domain\{$this->parentName}\Mappings;
+
+use LaravelDoctrine\Fluent\EntityMapping;
+use LaravelDoctrine\Fluent\Fluent;
+
+class ContactAddressMapping extends EntityMapping
+{
+    /**
+     * @return string
+     */
+    public function mapFor()
+    {
+        return {$className}::class;
+    }
+
+    /**
+     * @param Fluent \$builder
+     */
+    public function map(Fluent \$builder)
+    {
+        {$mappingEntries}
+    }
+}
+EOT;
+        return $template;
+}
+    /**
+     * Transformations
+     */
     private function getTransformEntityToView( )
     {
         $sq = "'";
@@ -104,8 +249,10 @@ EOT;
         return implode( "\n", $line);
     }
 
-    public function genTransformer( $parentEntity, $tableName)
+    public function genTransformer( )
     {
+        $tableName = $this->colData[0]['TABLE_NAME'];
+        $className = self::toCamelCase($tableName);
         $className = self::toCamelCase($tableName);
         $entityName = self::toCamelCase($tableName, true);
         $entityNameDTO = self::toCamelCase($tableName, true) . 'DTO';
@@ -122,8 +269,8 @@ namespace Domain\Donor\Transformers;
 
 use Carbon\Carbon;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Domain\{$parentEntity}\DTO\{$classNameDTO};
-use Domain\{$parentEntity}}\Entities\{$className};
+use Domain\{$this->parentName}\DTO\{$classNameDTO};
+use Domain\{$this->parentName}}\Entities\{$className};
 use Illuminate\Foundation\Http\FormRequest;
 use Support\DTO\DTO;
 use Support\Entities\BaseEntity;

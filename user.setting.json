@@ -1,0 +1,43 @@
+[
+    {
+        "User": {
+            "user_setttings": [
+                [
+                    "id",
+                    null,
+                    "NO",
+                    "int",
+                    null
+                ],
+                [
+                    "user_id",
+                    null,
+                    "NO",
+                    "int",
+                    null
+                ],
+                [
+                    "prefix",
+                    null,
+                    "NO",
+                    "varchar",
+                    32
+                ],
+                [
+                    "key_name",
+                    null,
+                    "NO",
+                    "varchar",
+                    32
+                ],
+                [
+                    "key_value",
+                    null,
+                    "NO",
+                    "longtext",
+                    4294967295
+                ]
+            ]
+        }
+    }
+]

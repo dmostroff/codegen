@@ -1,0 +1,43 @@
+[
+    {
+        "User": {
+            "user_setttings": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_DEFAULT": null,
+                    "IS_NULLABLE": "NO",
+                    "DATA_TYPE": "int",
+                    "CHARACTER_MAXIMUM_LENGTH": null
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_DEFAULT": null,
+                    "IS_NULLABLE": "NO",
+                    "DATA_TYPE": "int",
+                    "CHARACTER_MAXIMUM_LENGTH": null
+                },
+                {
+                    "COLUMN_NAME": "prefix",
+                    "COLUMN_DEFAULT": null,
+                    "IS_NULLABLE": "NO",
+                    "DATA_TYPE": "varchar",
+                    "CHARACTER_MAXIMUM_LENGTH": 32
+                },
+                {
+                    "COLUMN_NAME": "key_name",
+                    "COLUMN_DEFAULT": null,
+                    "IS_NULLABLE": "NO",
+                    "DATA_TYPE": "varchar",
+                    "CHARACTER_MAXIMUM_LENGTH": 32
+                },
+                {
+                    "COLUMN_NAME": "key_value",
+                    "COLUMN_DEFAULT": null,
+                    "IS_NULLABLE": "NO",
+                    "DATA_TYPE": "longtext",
+                    "CHARACTER_MAXIMUM_LENGTH": 4294967295
+                }
+            ]
+        }
+    }
+]
