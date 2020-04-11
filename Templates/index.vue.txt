@@ -1,0 +1,74 @@
+<template>
+  <v-container class="grey lighten-5" fluid ma-0 pa-0>
+    <v-row no-gutters class="md-12 xs-2 mb-2 pl-4">
+      <v-col cols="10" align-center justify-start class="display-1">{{$t("${entityName}.heading")}}</v-col>
+      <v-col class="pr-4" justify-end align-center>
+        <v-btn small color="primary" block="true"
+          href="${entitesName}/create"
+        >{{$t('action.create')}} {{ $t('${entityName}.heading')}} </v-btn>
+      </v-col>
+    </v-row>
+    <v-row no-gutters class="md-12 mb-2 pr-4">
+      <v-col cols="12">
+        <v-card outlined>
+          <v-data-table
+            caption
+            :items="${entitesName}List"
+            :items-per-page="5"
+            :headers="headers"
+            :single-select="true"
+            expand
+            item-key="id"
+            @click:row="edit${entityName}"
+          >
+          </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+<style>
+.heading {
+  border-bottom: 1px solid darkblue;
+}
+</style>
+<script>
+import Layout from "@/Shared/Layout";
+import InertiaButton from "@/Shared/InertiaButton";
+import * as fns from "@/helpers.js";
+
+export default {
+  metaInfo: { title: "${title}" },
+  layout: Layout,
+  components: {
+    InertiaButton
+  },
+  props: {
+    donors: Array,
+    phoneTypes: Array,
+    filters: Object
+  },
+  computed: {
+    headers: function() {
+      return [
+          {$tableColData}
+      ];
+    }
+  },
+  data() {
+    return {
+      form: {
+        search: null, // this.filters.search,
+        trashed: null // this.filters.trashed,
+      }
+    };
+  },
+  methods: {
+    edit${className}(row) {
+      // eslint-disable-next-line no-console
+      console.log(row);
+      location.href = this.route("${entitesName}.edit", row.id);
+    },
+  },
+};
+</script>

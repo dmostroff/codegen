@@ -1,5 +1,11 @@
-[
-    {
+{
+    "Project": {
+        "Name": "chesedcare",
+        "ProjectRoot": "C:\\Projects\\chesedcare",
+        "AppRoot": "app",
+        "ResourceRoot": "resources\\js"
+    },
+    "ProjectData": {
         "User": {
             "user_setttings": [
                 [
@@ -40,4 +46,4 @@
             ]
         }
     }
-]
+}

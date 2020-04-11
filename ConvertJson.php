@@ -4,15 +4,12 @@ namespace GenerateEntity;
 
 class ConvertJson
 {
-    private $json;
-
-    function __construct( $json) {
-        $this->json = $json;
+    function __construct() {
+        // $this->json = $json;
     }
 
-    public function run()
+    public function run($data)
     {
-        $data = json_decode($this->json, true);
         $metaData = [];
         foreach ($data as $parents) {
             $metaData[] = $this->convertParent($parents);

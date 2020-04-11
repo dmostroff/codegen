@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Domain\Donor\Transformers;
+namespace Domain\{User}\Transformers;
 
 
 use Carbon\Carbon;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Domain\{User}\DTO\{DTO};
-use Domain\{User}}\Entities\{};
+use Domain\{User}\DTO\{UserSetttingsDTO};
+use Domain\{User}}\Entities\{UserSetttings};
 use Illuminate\Foundation\Http\FormRequest;
 use Support\DTO\DTO;
 use Support\Entities\BaseEntity;
@@ -33,7 +33,7 @@ class DonorTransformer extends BaseTransformer
 
     public static function transformRequestToDTO (FormRequest $request): DTO
     {
-        $entityDTO = new DTO();
+        $entityDTO = new UserSetttingsDTO();
         $entityDTO            ->setId($request->get('id'))
             ->setUserId($request->get('user_id'))
             ->setPrefix($request->get('prefix'))
@@ -44,14 +44,14 @@ class DonorTransformer extends BaseTransformer
         return $entityDTO;
     }
 
-    public static function transformDTOToEntity (DTO $entityDTO,  $ = null): BaseEntity
+    public static function transformDTOToEntity (DTO $entityDTO, UserSetttings $userSetttings = null): BaseEntity
     {
-        $entity = $ ?? new ();
-        $entity            ->setId($DTO->getId())
-            ->setUserId($DTO->getUserId())
-            ->setPrefix($DTO->getPrefix())
-            ->setKeyName($DTO->getKeyName())
-            ->setKeyValue($DTO->getKeyValue())
+        $entity = $userSetttings ?? new UserSetttings();
+        $entity            ->setId($userSetttingsDTO->getId())
+            ->setUserId($userSetttingsDTO->getUserId())
+            ->setPrefix($userSetttingsDTO->getPrefix())
+            ->setKeyName($userSetttingsDTO->getKeyName())
+            ->setKeyValue($userSetttingsDTO->getKeyValue())
             ;
 
         return $entity;

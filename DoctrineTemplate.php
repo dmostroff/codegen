@@ -5,7 +5,7 @@ use GenerateEntity\AdminUtils;
 
 class DoctrineTemplate
 { 
-    private $colData;
+    private $projectData;
     private $parentName;
     private $tableName;
 
@@ -46,14 +46,19 @@ class DoctrineTemplate
         return self::toCamelCase($tableName);
     }
 
-    public function setColData( $colData)
+    public function setProjectData( $projectData)
     {
-        $this->colData = $colData;
+        $this->projectData = $projectData;
     }
 
-    public function filterColumns( $colData) {
+    public function getAppNamespace( $appPart)
+    {
+        $namespace = sprintf( 'Domain\%s\%s', $this->parentName, $appPart);
+    }
+
+    public function filterColumns( $projectData) {
         $keys = ['COLUMN_NAME', 'DATA_TYPE', 'COLUMN_DEFAULT', 'IS_NULLABLE', 'CHARACTER_MAXIMUM_LENGTH'];
-        $cols = array_map( fn($d) => array_values(array_filter( $d, fn($k) => in_array($k, $keys), ARRAY_FILTER_USE_KEY)), $colData);
+        $cols = array_map( fn($d) => array_values(array_filter( $d, fn($k) => in_array($k, $keys), ARRAY_FILTER_USE_KEY)), $projectData);
         var_dump($cols);
         return $cols;
     }
@@ -74,14 +79,14 @@ class DoctrineTemplate
     public function genProperties()
     {
         $fmt = "%4sprotected %s \$%s;";
-        $props = array_map( fn($col) => sprintf( $fmt, '', self::DATATYPES[$col['DATA_TYPE']], self::toCamelCase( $col['COLUMN_NAME'], true)) , $this->colData);
+        $props = array_map( fn($col) => sprintf( $fmt, '', self::DATATYPES[$col['DATA_TYPE']], self::toCamelCase( $col['COLUMN_NAME'], true)) , $this->projectData);
         return implode( "\n", $props);
     }
 
     private function genMethodsComments()
     {
         $fmt = " * @method %s %s";
-        $methods = array_map( fn($col) => sprintf( $fmt, self::DATATYPES[$col['DATA_TYPE']], $this->getGetter( $col['COLUMN_NAME'])) , $this->colData);
+        $methods = array_map( fn($col) => sprintf( $fmt, self::DATATYPES[$col['DATA_TYPE']], $this->getGetter( $col['COLUMN_NAME'])) , $this->projectData);
         return implode( "\n", $methods);
     }
 
@@ -90,7 +95,7 @@ class DoctrineTemplate
      */
     public function genEntity( $tableName)
     {
-        $parentName = $this->parentName;
+        $namespace = $this->getAppNamespace( 'Entites');
         $entityName = self::toCamelCase($tableName);
         $methods = $this->genMethodsComments();
         $props = $this->genProperties();
@@ -98,7 +103,7 @@ class DoctrineTemplate
         $template = <<<EOT
 <?php
 
-namespace Domain\$parentName\Entities;
+namespace $namespace;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -127,7 +132,7 @@ EOT;
      */
     public function genEntityDTO( $tableName)
     {
-        $parentName = $this->parentName;
+        $namespace = $this->getAppNamespace( 'DTO');
         $entityName = self::toCamelCase($tableName) . 'DTO';
         $methods = $this->genMethodsComments();
         $props = $this->genProperties();
@@ -135,7 +140,7 @@ EOT;
         $template = <<<EOT
 <?php
 
-namespace Domain\$parentName\DTO;
+namespace $namespace;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -164,15 +169,14 @@ EOT;
      */
     private function getMappingEntries()
     {
-        $line = array_map( fn($col) => sprintf( "%8s%s;", '', $this->getMappingEntry( $col)) , $this->colData);
+        $line = array_map( fn($col) => sprintf( "%8s%s;", '', $this->getMappingEntry( $col)) , $this->projectData);
         return implode( "\n", $line);
     }
 
     private function getMappingEntry( $col)
     {
         $retval = '$builder->';
-        // if( $col['COLUMN_NAME'] == 'id' || 
-        if( $col['EXTRA'] == 'auto_increment') {
+        if( $col['COLUMN_NAME'] == 'id' || (isset($col['EXTRA']) && $col['EXTRA'] == 'auto_increment')) {
             $retval .= 'increments';
         } else {
             $retval .= self::DATATYPE_MAPPING[$col['DATA_TYPE']];
@@ -191,12 +195,13 @@ EOT;
 
     public function genMappings()
     {
+        $namespace = $this->getAppNamespace( 'Mappings');
         $mappingEntries = $this->getMappingEntries();
-        $className = self::toCamelCase($this->colData[0]['TABLE_NAME']);
+        $className = self::toCamelCase($this->tableName);
         $template =<<<EOT
 <?php
 
-namespace Domain\{$this->parentName}\Mappings;
+namespace $namespace;
 
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
@@ -229,7 +234,7 @@ EOT;
     {
         $sq = "'";
         $fmt = "%12s%-15s => \$entity->%s,";
-        $line = array_map( fn($col) => sprintf( $fmt, '', $sq . self::toCamelCase( $col['COLUMN_NAME'], true) . $sq, $this->getGetter($col['COLUMN_NAME'])) , $this->colData);
+        $line = array_map( fn($col) => sprintf( $fmt, '', $sq . self::toCamelCase( $col['COLUMN_NAME'], true) . $sq, $this->getGetter($col['COLUMN_NAME'])) , $this->projectData);
         return implode( "\n", $line);
     }
 
@@ -237,7 +242,7 @@ EOT;
         $line = array_map( function($col) use ($entity) {
             $req = sprintf("\$request->get('%s')", $col['COLUMN_NAME']);
             return sprintf( "%12s->%s", '', $this->getSetter( $col['COLUMN_NAME'], $req));
-        }, $this->colData);
+        }, $this->projectData);
         return implode( "\n", $line);
     }
 
@@ -245,13 +250,14 @@ EOT;
         $line = array_map( function( $col) use( $entityDTO) {
             $entityDTOGet = sprintf("\$%s->%s", $entityDTO, $this->getGetter($col['COLUMN_NAME']));
             return sprintf( "%12s->%s", '', $this->getSetter($col['COLUMN_NAME'], $entityDTOGet));
-        }, $this->colData);
+        }, $this->projectData);
         return implode( "\n", $line);
     }
 
     public function genTransformer( )
     {
-        $tableName = $this->colData[0]['TABLE_NAME'];
+        $namespace = $this->getAppNamespace( 'Transformers');
+        $tableName = $this->tableName;
         $className = self::toCamelCase($tableName);
         $className = self::toCamelCase($tableName);
         $entityName = self::toCamelCase($tableName, true);
@@ -263,9 +269,7 @@ EOT;
         $template = <<<EOT
 <?php
 
-
-namespace Domain\Donor\Transformers;
-
+namespace $namespace;
 
 use Carbon\Carbon;
 use LaravelDoctrine\ORM\Facades\EntityManager;

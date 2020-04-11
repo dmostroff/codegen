@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain$parentName\DTO;
+namespace Domain\{User}\DTO;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
