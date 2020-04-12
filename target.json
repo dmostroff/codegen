@@ -1,0 +1,54 @@
+{
+    "Project": {
+        "Name": "chesedcare",
+        "ProjectRoot": "C:\\Projects\\chesedcare",
+        "AppRoot": "app",
+        "ResourceRoot": "resources\\js"
+    },
+    "ProjectData": {
+        "User": {
+            "user_settting": [
+                {
+                    "COLUMN_NAME": "id",
+                    "DATA_TYPE": "int",
+                    "LENGTH": null,
+                    "IS_NULLABLE": null,
+                    "DEFAULT": null,
+                    "AUTO_INCREMENT": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "DATA_TYPE": "int",
+                    "LENGTH": 32,
+                    "IS_NULLABLE": null,
+                    "DEFAULT": null,
+                    "AUTO_INCREMENT": null
+                },
+                {
+                    "COLUMN_NAME": "prefix",
+                    "DATA_TYPE": "varchar",
+                    "LENGTH": 32,
+                    "IS_NULLABLE": null,
+                    "DEFAULT": "SYS",
+                    "AUTO_INCREMENT": null
+                },
+                {
+                    "COLUMN_NAME": "key_name",
+                    "DATA_TYPE": "varchar",
+                    "LENGTH": 32,
+                    "IS_NULLABLE": null,
+                    "DEFAULT": null,
+                    "AUTO_INCREMENT": null
+                },
+                {
+                    "COLUMN_NAME": "key_value",
+                    "DATA_TYPE": "text",
+                    "LENGTH": null,
+                    "IS_NULLABLE": "YES",
+                    "DEFAULT": null,
+                    "AUTO_INCREMENT": null
+                }
+            ]
+        }
+    }
+}

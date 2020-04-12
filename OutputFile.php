@@ -37,7 +37,7 @@ class OutputFile
      */
     public static function writeEntity( string $parentName, string $className, string $outString)
     {
-        self::writeClassFile( $parentName, "Entites", $className, "", $outString);
+        self::writeClassFile( $parentName, "Entities", $className, "", $outString);
     }
     public static function writeEntityDTO( string $parentName, string $className, string $outString)
     {
@@ -68,9 +68,9 @@ class OutputFile
     {
         self::writeResourceFile( $parentName, "Page", $className, $viewName, $outString);
     }
-    public static function writeVueModel( $parentName, string $className, string $viewName, string $outString)
+    public static function writeVueModel( $parentName, string $className, string $outString)
     {
-        self::writeResourceFile( $parentName, "Model", $className, $viewName, $outString);
+        self::writeResourceFile( $parentName, "Model", $className, $className, $outString);
     }
 
 

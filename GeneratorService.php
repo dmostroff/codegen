@@ -38,6 +38,28 @@ class GeneratorService
 //        file_put_contents(TARGETFILENAME, $json);
     }
 
+    public function runVue($metaData)
+    {
+        OutputFile::setProjectRoot($metaData['Project']['ProjectRoot']);
+        OutputFile::setAppRoot($metaData['Project']['AppRoot']);
+        OutputFile::setResourceRoot($metaData['Project']['ResourceRoot']);
+        $dt = new DoctrineTemplate($metaData['Project']['Name']);
+        foreach ($metaData['ProjectData'] as $parentName => $tables) {
+            $dt->setParentName($parentName);
+            foreach ($tables as $tableName => $projectData) {
+                $dt->setTableName($tableName);
+                $dt->setProjectData($projectData);
+                $className = $dt->getClassName($tableName);
+                //$vueModel = $dt->genVueModel($tableName);
+                $vueIndex = $dt->genVueIndex($tableName);
+                //var_dump( $vueIndex);
+                //OutputFile::writeVueModel($parentName, $className, $vueModel);
+                // OutputFile::writeVueIndex($parentName, $className, $vueIndex);
+            }
+        }
+//        file_put_contents(TARGETFILENAME, $json);
+    }
+
     public function convertData($data)
     {
         return $this->convertParent($data);
@@ -62,24 +84,25 @@ class GeneratorService
         return $tablesData;
     }
 
-
     private function convertTable($table)
     {
-        $tableData = [];
-        foreach ($table as $cols) {
-            $tableData[] = $this->convertCols($cols);
+        $tableData = [
+            $this->convertCols( "id", [ "int", null, null, null, "auto_increment"])
+        ];
+        foreach ($table as $colName => $cols) {
+            $tableData[] = $this->convertCols($colName, $cols);
         }
         return $tableData;
     }
-
-    private function convertCols($cols)
+    private function convertCols($colName, $cols)
     {
-        $colData = [];
-        $keys = ['COLUMN_NAME', 'COLUMN_DEFAULT', 'IS_NULLABLE', 'DATA_TYPE', 'CHARACTER_MAXIMUM_LENGTH'];
-        $ii = 0;
-        foreach ($cols as $colPart) {
-            $colData[$keys[$ii++]] = $colPart;
-        }
-        return $colData;
+        return [
+            'COLUMN_NAME' => $colName,
+            'DATA_TYPE' => (count($cols) > 0) ? $cols[0] : "varchar",
+            'LENGTH' =>  (count($cols) > 1) ? $cols[1] : 32,
+            'IS_NULLABLE' =>  (count($cols) > 2 && $cols[2] == 'YES') ? 'YES' : null,
+            'DEFAULT' => (count($cols) > 3) ? $cols[3] : null,
+            'AUTO_INCREMENT' => (count($cols) > 4) ? $cols[4] : null
+        ];
     }
 }

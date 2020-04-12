@@ -29,12 +29,19 @@ switch ($cmd) {
    case 'readDatabase':
       $json  = readDatabase($jsonFilename);
       file_put_contents(TARGETFILENAME, $json);
-   break;
+      break;
    case 'readMetaDataFile':
       $service = new GeneratorService();
       $data = $service->readMetaDataFile($jsonFilename);
+      file_put_contents(TARGETFILENAME, json_encode( $data, JSON_PRETTY_PRINT));
       // var_dump($data);
-      $service->run($data);
+      //$service->run($data);
+      break;
+   case 'vue':
+      $service = new GeneratorService();
+      $data = $service->readMetaDataFile($jsonFilename);
+      var_dump($data);
+      $service->runVue($data);
       break;
    default:
       break;

@@ -1,0 +1,6 @@
+<text-input
+          v-model="{$entityName}.{$colName}"
+          :errors="$page.errors.{$colName}"
+          class="pr-6 pb-8 w-full lg:w-1/2"
+          label="{$colLabel}"
+        />

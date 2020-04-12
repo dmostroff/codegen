@@ -1,0 +1,137 @@
+<template>
+  <form v-if="data" @submit.prevent="submit">
+    <v-card outlined>
+      <v-card-text>
+        <h2>{{ donor.addresses.length}}</h2>
+        <h2>{{ donor.emails.length }}</h2>
+        <v-select class="form-contol">
+          <option
+            v-for="item in [{id: 'Mr', name: 'Mr.'}, {id: 'Ms', name: 'Ms.' }]"
+            v-bind:key="item.id"
+            v-bind:value="item.id"
+            :selected="item == 'None'"
+          >{{ item.name}}</option>
+        </v-select>
+        <text-input
+          v-model="donor.firstName"
+          :errors="$page.errors.firstName"
+          class="pr-6 pb-8 w-full lg:w-1/2"
+          label="First Name"
+        />
+        <text-input
+          v-model="donor.lastName"
+          :errors="$page.errors.lastName"
+          class="pr-6 pb-8 w-full lg:w-1/2"
+          label="Last Name"
+        />
+        <addresses-manager
+          v-if="donor.addresses && donor.addresses.length > 0"
+          :data="donor.addresses"
+          :owning-entity="{name:'donor',id: donor.id }"
+        />
+        <emails-manager
+          v-if="donor.emails && donor.emails.length > 0"
+          :data="data.emails"
+          :owning-entity="{name:'donor',id: donor.id }"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <loading-button :loading="sending" type="submit">{{ submitText }}</loading-button>
+      </v-card-actions>
+    </v-card>
+  </form>
+</template>
+
+<script>
+import LoadingButton from "@/Shared/LoadingButton";
+import TextInput from "@/Shared/Form/TextInput";
+import { mdiEye } from "@mdi/js";
+import AddressesManager from "@/Shared/MultipleEntitiesHandler/AddressesManager";
+import Donor from "@/Models/Donor/Donor";
+import firstOrNew from "@/Shared/mixins/first-or-new";
+import EmailsManager from "@/Shared/MultipleEntitiesHandler/EmailsManager";
+import * as fns from "@/helpers.js";
+
+export default {
+  name: "DonorForm",
+  components: { EmailsManager, LoadingButton, TextInput, AddressesManager },
+  mixins: [firstOrNew],
+  props: {
+    errors: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
+  computed: {
+    // console: () => console,
+    donorFmt: function() {
+      donor["name"] = fns.formatName(donor);
+      donor["address"] =
+        donor["addresses"] && donor["addresses"].length > 0
+          ? fns.formatAddress(donor["addresses"][0])
+          : "None";
+    }
+  },
+  data() {
+    return {
+      data: null,
+      sending: false,
+      icons: {
+        mdiEye
+      },
+      titles: [
+        { id: "Mr", name: "Mr." },
+        { id: "Ms", name: "Ms." },
+        { id: "Sir", name: "Sir" },
+        { id: "Rev", name: "Reverand" }
+      ]
+    };
+  },
+  computed: {
+    isEdit() {
+      return location.href.includes("edit");
+    },
+    donor() {
+      return this.firstOrNew(Donor, ["addresses", "emails"]);
+    },
+    submitText() {
+      return this.isEdit ? "Update Donor" : "Create Donor";
+    }
+  },
+  mounted() {
+    this.data = {
+      name: this.donor.name
+    };
+  },
+  methods: {
+    async submit() {
+      await Donor.update({ id: this.donor.id, ...this.data });
+
+      this.sending = true;
+
+      let data = this.firstOrNew(Donor, ["addresses", "emailsnpm"]);
+      console.log(data);
+
+      if (!this.isEdit) {
+        delete data.id;
+      }
+
+      if (this.isEdit) {
+        await this.$http.update("donors.update", this.donor.id, data);
+      } else {
+        await this.$http.store("donors.store", data);
+      }
+
+      this.sending = false;
+    }
+  }
+};
+</script>
+
+<style scoped>
+.boxed {
+  border: 2px solid #2a4365;
+}
+</style>

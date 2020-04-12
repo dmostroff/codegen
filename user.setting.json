@@ -7,43 +7,12 @@
     },
     "ProjectData": {
         "User": {
-            "user_setttings": [
-                [
-                    "id",
-                    null,
-                    "NO",
-                    "int",
-                    null
-                ],
-                [
-                    "user_id",
-                    null,
-                    "NO",
-                    "int",
-                    null
-                ],
-                [
-                    "prefix",
-                    null,
-                    "NO",
-                    "varchar",
-                    32
-                ],
-                [
-                    "key_name",
-                    null,
-                    "NO",
-                    "varchar",
-                    32
-                ],
-                [
-                    "key_value",
-                    null,
-                    "NO",
-                    "longtext",
-                    4294967295
-                ]
-            ]
+            "user_settting": {
+                 "user_id": [ "int" ],
+                 "prefix": [ "varchar", 32, null, "SYS"],
+                 "key_name": [ "varchar", 32],
+                 "key_value": [ "text", null, "YES" ]
+            }
         }
     }
 }

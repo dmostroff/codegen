@@ -1,10 +1,11 @@
 <?php
+
 namespace GenerateEntity;
 
 use GenerateEntity\AdminUtils;
 
 class DoctrineTemplate
-{ 
+{
     private $projectData;
     private $parentName;
     private $tableName;
@@ -12,10 +13,11 @@ class DoctrineTemplate
     const DATATYPES = [
         'varchar' => 'string',
         'char' => 'string',
-        'int' => 'integer',
+        'int' => 'int',
         'datetime' => 'Carbon',
         'date' => 'Carbon',
         'tinyint' => 'boolean',
+        'text' => 'string',
         'longtext' => 'string'
     ];
 
@@ -26,77 +28,95 @@ class DoctrineTemplate
         'datetime' => 'dateTime',
         'date' => 'date',
         'tinyint' => 'boolean',
+        'text' => 'text',
         'longtext' => 'text'
     ];
-    function __construct( $parentName) {
-        $this->parentName = $parentName;
-    }
 
-    public function setParentName( $parentName)
+    const VUE_TEMPLATE_DIR = '.\Templates\Vue';
+
+    function __construct($parentName)
     {
         $this->parentName = $parentName;
     }
-    public function setTableName( $tableName)
+
+    public static function toCamelCase($word, $lowercasefirst = false)
+    {
+        $retval = str_replace(' ', '', ucwords(strtr($word, '_-', ' ')));
+        if ($lowercasefirst) {
+            $retval = lcfirst($retval);
+        }
+        return $retval;
+    }
+
+    public function setParentName($parentName)
+    {
+        $this->parentName = $parentName;
+    }
+    public function setTableName($tableName)
     {
         $this->tableName = $tableName;
     }
 
-    public function getClassName( $tableName)
+    public function getClassName($tableName)
     {
         return self::toCamelCase($tableName);
     }
 
-    public function setProjectData( $projectData)
+    public function getEntityName($tableName)
+    {
+        return self::toCamelCase($tableName, true);
+    }
+
+    public function setProjectData($projectData)
     {
         $this->projectData = $projectData;
     }
 
-    public function getAppNamespace( $appPart)
+    public function getAppNamespace($appPart)
     {
-        $namespace = sprintf( 'Domain\%s\%s', $this->parentName, $appPart);
+        return sprintf('Domain\%s\%s', $this->parentName, $appPart);
     }
 
-    public function filterColumns( $projectData) {
-        $keys = ['COLUMN_NAME', 'DATA_TYPE', 'COLUMN_DEFAULT', 'IS_NULLABLE', 'CHARACTER_MAXIMUM_LENGTH'];
-        $cols = array_map( fn($d) => array_values(array_filter( $d, fn($k) => in_array($k, $keys), ARRAY_FILTER_USE_KEY)), $projectData);
-        var_dump($cols);
+    public function filterColumns($projectData)
+    {
+        $keys = ['COLUMN_NAME', 'DATA_TYPE', 'DEFAULT', 'IS_NULLABLE', 'LENGTH'];
+        $cols = array_map(fn ($d) => array_values(array_filter($d, fn ($k) => in_array($k, $keys), ARRAY_FILTER_USE_KEY)), $projectData);
         return $cols;
     }
 
-    private function getGetter( $colName)
+    private function getGetter($colName)
     {
-        return sprintf( 'get%s()', self::toCamelCase($colName));
+        return sprintf('get%s()', self::toCamelCase($colName));
     }
 
-    private function getSetter( $colName, $arg)
+    private function getSetter($colName, $arg)
     {
-        return sprintf( 'set%s(%s)', self::toCamelCase($colName), $arg);
+        return sprintf('set%s(%s)', self::toCamelCase($colName), $arg);
     }
-    private function mapDataTypes( $dataType)
+    private function mapDataTypes($dataType)
     {
-
     }
     public function genProperties()
     {
         $fmt = "%4sprotected %s \$%s;";
-        $props = array_map( fn($col) => sprintf( $fmt, '', self::DATATYPES[$col['DATA_TYPE']], self::toCamelCase( $col['COLUMN_NAME'], true)) , $this->projectData);
-        return implode( "\n", $props);
+        $props = array_map(fn ($col) => sprintf($fmt, '', self::DATATYPES[$col['DATA_TYPE']], self::toCamelCase($col['COLUMN_NAME'], true)), $this->projectData);
+        return implode("\n", $props);
     }
 
     private function genMethodsComments()
     {
         $fmt = " * @method %s %s";
-        $methods = array_map( fn($col) => sprintf( $fmt, self::DATATYPES[$col['DATA_TYPE']], $this->getGetter( $col['COLUMN_NAME'])) , $this->projectData);
-        return implode( "\n", $methods);
+        $methods = array_map(fn ($col) => sprintf($fmt, $col['DATA_TYPE'], $this->getGetter($col['COLUMN_NAME'])), $this->projectData);
+        return implode("\n", $methods);
     }
 
     /**
      * Entity
      */
-    public function genEntity( $tableName)
+    public function genEntity($tableName)
     {
-        $namespace = $this->getAppNamespace( 'Entites');
-        $entityName = self::toCamelCase($tableName);
+        $namespace = $this->getAppNamespace('Entities');
+        $entityName = $this->getEntityName($tableName);
         $methods = $this->genMethodsComments();
         $props = $this->genProperties();
 
@@ -109,6 +129,7 @@ use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Illuminate\Support\Collection;
+use Support\GettersAndSetters;
 
 /**
 {$methods}
@@ -123,17 +144,17 @@ class $entityName
 
 EOT;
         $bs = chr(92);
-        return str_replace( "$bs$bs", $bs, $template);
+        return str_replace("$bs$bs", $bs, $template);
     }
 
 
     /**
      * Entity
      */
-    public function genEntityDTO( $tableName)
+    public function genEntityDTO($tableName)
     {
-        $namespace = $this->getAppNamespace( 'DTO');
-        $entityName = self::toCamelCase($tableName) . 'DTO';
+        $namespace = $this->getAppNamespace('DTO');
+        $entityName = $this->getEntityName($tableName . 'DTO');
         $methods = $this->genMethodsComments();
         $props = $this->genProperties();
 
@@ -146,6 +167,8 @@ use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Illuminate\Support\Collection;
+use Support\GettersAndSetters;
+
 
 /**
 {$methods}
@@ -160,7 +183,7 @@ class $entityName
 
 EOT;
         $bs = chr(92);
-        return str_replace( "$bs$bs", $bs, $template);
+        return str_replace("$bs$bs", $bs, $template);
     }
 
 
@@ -169,25 +192,25 @@ EOT;
      */
     private function getMappingEntries()
     {
-        $line = array_map( fn($col) => sprintf( "%8s%s;", '', $this->getMappingEntry( $col)) , $this->projectData);
-        return implode( "\n", $line);
+        $line = array_map(fn ($col) => sprintf("%8s%s;", '', $this->getMappingEntry($col)), $this->projectData);
+        return implode("\n", $line);
     }
 
-    private function getMappingEntry( $col)
+    private function getMappingEntry($col)
     {
         $retval = '$builder->';
-        if( $col['COLUMN_NAME'] == 'id' || (isset($col['EXTRA']) && $col['EXTRA'] == 'auto_increment')) {
-            $retval .= 'increments';
+        if ($col['COLUMN_NAME'] == 'id' || (isset($col['AUTO_INCREMENT']) && $col['AUTO_INCREMENT'] == 'auto_increment')) {
+            $retval .= sprintf("%s('%s')", 'increments', $col['COLUMN_NAME']);
         } else {
-            $retval .= self::DATATYPE_MAPPING[$col['DATA_TYPE']];
+            $retval .= sprintf("%s('%s')", self::DATATYPE_MAPPING[$col['DATA_TYPE']], $col['COLUMN_NAME']);
         }
-        if( $col['CHARACTER_MAXIMUM_LENGTH']) {
-            $retval .= "->length({$col['CHARACTER_MAXIMUM_LENGTH']})";
+        if ($col['LENGTH'] && !in_array($col['DATA_TYPE'], ['longtext', 'text'])) {
+            $retval .= "->length({$col['LENGTH']})";
         }
-        if( $col['COLUMN_DEFAULT']) {
-            $retval .= "->default('{$col['COLUMN_DEFAULT']}')";
+        if ($col['DEFAULT']) {
+            $retval .= "->default('{$col['DEFAULT']}')";
         }
-        if( $col['IS_NULLABLE'] == 'YES') {
+        if ($col['IS_NULLABLE'] == 'YES') {
             $retval .= "->nullable()";
         }
         return $retval;
@@ -195,14 +218,17 @@ EOT;
 
     public function genMappings()
     {
-        $namespace = $this->getAppNamespace( 'Mappings');
+        $namespace = $this->getAppNamespace('Mappings');
+        $entityName = $this->getEntityName($this->tableName);
+        $useEntity = sprintf("Domain\%s\Entities\%s", $this->parentName, $entityName);
         $mappingEntries = $this->getMappingEntries();
         $className = self::toCamelCase($this->tableName);
-        $template =<<<EOT
+        $template = <<<EOT
 <?php
 
 namespace $namespace;
 
+use $useEntity;
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
 
@@ -221,51 +247,56 @@ class ContactAddressMapping extends EntityMapping
      */
     public function map(Fluent \$builder)
     {
-        {$mappingEntries}
+{$mappingEntries}
     }
 }
 EOT;
         return $template;
-}
+    }
     /**
      * Transformations
      */
-    private function getTransformEntityToView( )
+    private function getTransformEntityToView()
     {
         $sq = "'";
         $fmt = "%12s%-15s => \$entity->%s,";
-        $line = array_map( fn($col) => sprintf( $fmt, '', $sq . self::toCamelCase( $col['COLUMN_NAME'], true) . $sq, $this->getGetter($col['COLUMN_NAME'])) , $this->projectData);
-        return implode( "\n", $line);
+        $line = array_map(fn ($col) => sprintf($fmt, '', $sq . self::toCamelCase($col['COLUMN_NAME'], true) . $sq, $this->getGetter($col['COLUMN_NAME'])), $this->projectData);
+        return trim(implode("\n", $line));
     }
 
-    private function getTransformRequestToDTO( $entity) {
-        $line = array_map( function($col) use ($entity) {
-            $req = sprintf("\$request->get('%s')", $col['COLUMN_NAME']);
-            return sprintf( "%12s->%s", '', $this->getSetter( $col['COLUMN_NAME'], $req));
-        }, $this->projectData);
-        return implode( "\n", $line);
-    }
-
-    private function getTransformDTOToEntity($entityDTO) {
-        $line = array_map( function( $col) use( $entityDTO) {
-            $entityDTOGet = sprintf("\$%s->%s", $entityDTO, $this->getGetter($col['COLUMN_NAME']));
-            return sprintf( "%12s->%s", '', $this->getSetter($col['COLUMN_NAME'], $entityDTOGet));
-        }, $this->projectData);
-        return implode( "\n", $line);
-    }
-
-    public function genTransformer( )
+    private function getTransformRequestToDTO($entity)
     {
-        $namespace = $this->getAppNamespace( 'Transformers');
+        $line = array_map(function ($col) use ($entity) {
+            $req = sprintf("\$request->get('%s')", $col['COLUMN_NAME']);
+            return sprintf("%12s->%s", '', $this->getSetter($col['COLUMN_NAME'], $req));
+        }, $this->projectData);
+        return trim(implode("\n", $line));
+    }
+
+    private function getTransformDTOToEntity($entityDTO)
+    {
+        $line = array_map(function ($col) use ($entityDTO) {
+            $entityDTOGet = sprintf("\$%s->%s", $entityDTO, $this->getGetter($col['COLUMN_NAME']));
+            return sprintf("%12s->%s", '', $this->getSetter($col['COLUMN_NAME'], $entityDTOGet));
+        }, $this->projectData);
+        return trim(implode("\n", $line));
+    }
+
+    public function genTransformer()
+    {
+        $namespace = $this->getAppNamespace('Transformers');
         $tableName = $this->tableName;
-        $className = self::toCamelCase($tableName);
-        $className = self::toCamelCase($tableName);
-        $entityName = self::toCamelCase($tableName, true);
-        $entityNameDTO = self::toCamelCase($tableName, true) . 'DTO';
-        $classNameDTO = self::toCamelCase($tableName) . 'DTO';
+        $entityName = $this->getEntityName($tableName);
+        $className = $this->getClassName($tableName);
+        $entityNameDTO = $entityName . 'DTO';
+        $classNameDTO = $className . 'DTO';
         $tEntityToView = $this->getTransformEntityToView();
         $tRequestToDTO = $this->getTransformRequestToDTO($entityNameDTO);
         $tDTOToEntity = $this->getTransformDTOToEntity($entityNameDTO);
+
+        $useEntity = sprintf("Domain\%s\Entities\%s", $this->parentName, $className);
+        $useEntityDTO = sprintf("Domain\%s\DTO\%s", $this->parentName, $classNameDTO);
+
         $template = <<<EOT
 <?php
 
@@ -273,8 +304,8 @@ namespace $namespace;
 
 use Carbon\Carbon;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Domain\{$this->parentName}\DTO\{$classNameDTO};
-use Domain\{$this->parentName}}\Entities\{$className};
+use $useEntity;
+use $useEntityDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Support\DTO\DTO;
 use Support\Entities\BaseEntity;
@@ -303,7 +334,7 @@ class DonorTransformer extends BaseTransformer
         return \$entityDTO;
     }
 
-    public static function transformDTOToEntity (DTO \$entityDTO, {$className} \${$entityName} = null): BaseEntity
+    public static function transformDTOToEntity (DTO \$entityDTO, {$classNameDTO} \${$entityNameDTO} = null): BaseEntity
     {
         \$entity = \${$entityName} ?? new {$className}();
         \$entity{$tDTOToEntity}
@@ -316,14 +347,136 @@ EOT;
         return $template;
     }
 
-    public static function toCamelCase($word, $lowercasefirst = false)
+    /**
+     * Vue templates
+     */
+    const VUE_DATATYPES = [
+        'varchar' => 'string',
+        'text' => 'string',
+        'date' => 'attr',
+        'datetime' => 'attr',
+        'int' => 'number',
+        'float' => 'number',
+    ];
+
+    private static function escapePattern( $searchString)
     {
-        $retval = str_replace(' ', '', ucwords(strtr($word, '_-', ' ')));
-        if( $lowercasefirst)
-        {
-            $retval = lcfirst($retval);
-        }
-        return $retval;
+        return sprintf( '/\{\$%s\}/', $searchString);
     }
 
+    private function getVueColumns( $cols)
+    {
+        $colData = array_map( fn($col) => $this->getVueColumn($col), $this->projectData);
+        return implode( ",\n", $colData);
+    }
+
+    private function getVueColumn( $col) {
+        $fmt = "%12s%s: this.%s()";
+        if( $col['AUTO_INCREMENT'] == 'auto_increment') {
+            return sprintf( $fmt, '', $col['COLUMN_NAME'], 'uid');
+        }
+        return sprintf( $fmt, '', self::toCamelCase($col['COLUMN_NAME'], true), self::VUE_DATATYPES[$col['DATA_TYPE']]);
+    }
+
+    public function genVueModel()
+    {
+        $className = $this->getClassName($this->tableName);
+        $entityName = $this->getEntityName($this->tableName);
+        $colData = $this->getVueColumns($this->projectData);
+        $tmplt = <<<EOT
+import { Model } from '@vuex-orm/core'
+
+export default class $className extends Model {
+    static entity = '$entityName'
+
+    static fields () {
+        return {
+$colData
+        }
+    }
+}
+
+EOT;
+        return $tmplt;
+    }
+
+    private function substituteVueTemplate( $templateFile, $aPatterns, $aReplacements)
+    {
+        $className = $this->getClassName($this->tableName);
+        $title = (substr($className, -1) == 'y') ? substr( $className, 0, -1) . 'ies' : $className . 's';
+        $entityName = $this->getEntityName($this->tableName);
+        $entitiesName = (substr($entityName, -1) == 'y') ? substr( $entityName, 0, -1) . 'ies' : $className . 's';
+
+        $basePattern = [
+            self::escapePattern( 'className'),
+            self::escapePattern('title'),
+            self::escapePattern('entitiesName'),
+            self::escapePattern('entityName')
+        ];
+        $patterns = array_merge( $basePattern, $aPatterns);
+        var_dump( $patterns);
+        $replacements = array_merge([$className, $title, $entitiesName, $entityName], $aReplacements);
+        echo "&&&&&&\n";
+        var_dump($replacements);
+        $template = file_get_contents(self::getTemplateFileName( $templateFile));
+        $instance = preg_replace($patterns, $replacements, $template);
+        var_dump($instance);
+        echo "***************";
+        return $instance;
+    }
+
+    public function genVueIndex()
+    {
+        $tableColData = $this->getVueColumns($this->projectData);
+        $indexFile = $this->substituteVueTemplate( 'index.vue.txt', ['/\{\$tableColData\}/'], [$tableColData]);
+        return $indexFile;
+    }
+
+    public function genVueEdit()
+    {
+        $tableColData = $this->getVueColumns($this->projectData);
+        $editFile = $this->substituteVueTemplate( 'edit.vue.txt', [], []);
+        var_dump($editFile);
+    }
+
+    public function genVueCreate()
+    {
+        $tableColData = $this->getVueColumns($this->projectData);
+        $createFile = $this->substituteVueTemplate( 'create.vue.txt', [], []);
+        var_dump($createFile);
+    }
+
+    private function getVueTextInputFields($cols)
+    {
+        $template = file_get_contents(self::getTemplateFileName( 'text-input.vue.txt'));
+        $entityName = $this->getEntityName($this->tableName);
+        $patterns = [
+            self::escapePattern( 'entityName'),
+            self::escapePattern('colName'),
+            self::escapePattern('colLabel')
+        ];
+        $textInputs = array_map( function ($col) use ($template, $entityName, $patterns) {
+            $replace = [ $entityName, $col['COLUMN_NAME'], str_replace( '_', ' ', $col['COLUMN_NAME'])];
+          return preg_replace( $patterns, $replace, $template);
+        }, $cols);
+        return $textInputs;
+    }
+    public function genVueEntityForm()
+    {
+        $cols = $this->projectData[$this->parentName][$this->tableName];
+        $textInputFields = $this->getVueTextInputFields($cols);
+        $entityFormFile = $this->substituteVueTemplate( 
+            'entityForm.vue.txt',
+            self::escapePattern('textInputFields'),
+            $textInputFields
+            );
+        var_dump($entityFormFile);
+
+        // var_dump($indexTmplt);
+    }
+
+    private static function getTemplateFileName($filename)
+    {
+        return implode(DIRECTORY_SEPARATOR, [self::VUE_TEMPLATE_DIR, $filename]);
+    }
 }
