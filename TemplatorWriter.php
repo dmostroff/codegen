@@ -2,7 +2,7 @@
 
 namespace GenerateEntity;
 
-class OutputFile
+class TemplatorWriter
 {
     private static $projectRoot;
     private static $appRoot;
@@ -76,7 +76,7 @@ class OutputFile
 
     private static function writeResourceFile( string $parentName, $directory, string $className, $viewName, string $outString)
     {
-        $fullpath = implode( DIRECTORY_SEPARATOR, [self::$projectRoot, self::$resourceRoot, 'js', $directory, $className]);
+        $fullpath = implode( DIRECTORY_SEPARATOR, [self::$projectRoot, self::$resourceRoot, $directory, $className]);
         if (!file_exists($fullpath)) { 
             mkdir($fullpath, 0777, true); 
         }

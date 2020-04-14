@@ -2,25 +2,23 @@
 
 namespace GenerateEntity;
 
-class ConvertJson
+class MetaDataReader
 {
-    function __construct() {
-        // $this->json = $json;
-    }
-
-    public function run($data)
+    public function read( string $filename)
     {
-        $metaData = [];
-        foreach ($data as $parents) {
-            $metaData[] = $this->convertParent($parents);
+        $json = file_get_contents($filename);
+        echo "Reading..." . $filename;
+        $metaData = json_decode($json, true);
+        if( $metaData) {
+            $metaData['Entities'] = $this->convertData($metaData['Entities']);
         }
-        return json_encode($metaData, JSON_PRETTY_PRINT);
+        return $metaData;
     }
 
-    private function convertParent($parents)
+    private function convertData(array $metaData)
     {
         $parentData = [];
-        foreach ($parents  as $parent => $tables) {
+        foreach ($metaData  as $parent => $tables) {
             $parentData[$parent] = $this->convertTables($tables);
         }
         return $parentData;
@@ -29,20 +27,23 @@ class ConvertJson
     private function convertTables($tables)
     {
         $tablesData = [];
-        foreach ($tables as $table => $tableCols) {
-            $tablesData[$table] = $this->convertTable($tableCols);
+        foreach ($tables as $table => $cols) {
+            $tablesData[$table] = $this->convertTable($cols);
         }
         return $tablesData;
     }
 
     private function convertTable($table)
     {
-        $tableData = [];
+        $tableData = [
+            $this->convertCols( "id", [ "int", null, null, null, "auto_increment"])
+        ];
         foreach ($table as $colName => $cols) {
             $tableData[] = $this->convertCols($colName, $cols);
         }
         return $tableData;
     }
+
     private function convertCols($colName, $cols)
     {
         return [
@@ -54,4 +55,5 @@ class ConvertJson
             'AUTO_INCREMENT' => (count($cols) > 4) ? $cols[4] : null
         ];
     }
+   
 }

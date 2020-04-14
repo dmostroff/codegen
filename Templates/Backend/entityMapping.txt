@@ -1,0 +1,26 @@
+<?php
+
+namespace {$namespace};
+
+use {$useEntity};
+use LaravelDoctrine\Fluent\EntityMapping;
+use LaravelDoctrine\Fluent\Fluent;
+
+class ContactAddressMapping extends EntityMapping
+{
+    /**
+     * @return string
+     */
+    public function mapFor()
+    {
+        return {$className}::class;
+    }
+
+    /**
+     * @param Fluent \$builder
+     */
+    public function map(Fluent \$builder)
+    {
+{$mappingEntries}
+    }
+}

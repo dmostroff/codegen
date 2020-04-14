@@ -1,0 +1,39 @@
+<?php
+
+
+namespace Domain\{$className}\Actions;
+
+use Domain\{$className}\DTO\{$className}DTO;
+use Domain\{$className}\Entities\{$className};
+use Domain\{$className}\Entities\{$className}Address;
+use Domain\{$className}\Transformers\{$className}Transformer;
+use Domain\Common\Deleter\RelatedEntitiesDeleter;
+
+class Update{$className}
+{
+    private {$className} ${$entityName};
+    private {$className}DTO ${$entityName}Dto;
+
+    function __construct ({$className} ${$entityName}, {$className}DTO ${$entityName}Dto)
+    {
+        $this->{$entityName} = ${$entityName};
+        $this->{$entityName}Dto = ${$entityName}Dto;
+    }
+
+    public function handle () : {$className}
+    {
+        $this->{$entityName} = {$className}Transformer::transformDTOToEntity($this->{$entityName}Dto, $this->{$entityName});
+
+        $em = app('em');
+
+        $del = new RelatedEntitiesDeleter('{$entityName}',$this->{$entityName});
+
+        $del->delete([{$className}Address::class]);
+
+        $em->persist($this->{$entityName});
+        $em->flush();
+
+        return $this->{$entityName};
+    }
+
+}

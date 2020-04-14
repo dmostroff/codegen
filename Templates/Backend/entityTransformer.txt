@@ -1,0 +1,45 @@
+<?php
+
+namespace {$namespace};
+
+use Carbon\Carbon;
+use LaravelDoctrine\ORM\Facades\EntityManager;
+use {$useEntity};
+use {$useEntityDTO};
+use Illuminate\Foundation\Http\FormRequest;
+use Support\DTO\DTO;
+use Support\Entities\BaseEntity;
+use Support\GlobalUtility;
+use Support\Transformers\BaseTransformer;
+
+class {$className}Transformer extends BaseTransformer
+{
+    public static function transformEntityToView (?BaseEntity $entity): array
+    {
+        if (is_null($entity)) {
+            return null;
+        }
+
+        return [
+            {$tEntityToView}
+        ];
+    }
+
+    public static function transformRequestToDTO (FormRequest $request): DTO
+    {
+        $entityDTO = new {$classNameDTO}();
+        $entityDTO{$tRequestToDTO}
+            ;
+
+        return $entityDTO;
+    }
+
+    public static function transformDTOToEntity (DTO $entityDTO, {$classNameDTO} ${$entityNameDTO} = null): BaseEntity
+    {
+        $entity = ${$entityNameDTO} ?? new {$className}();
+        $entity{$tDTOToEntity}
+            ;
+
+        return $entity;
+    }
+}

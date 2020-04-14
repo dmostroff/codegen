@@ -13,13 +13,13 @@
         <v-card outlined>
           <v-data-table
             caption
-            :items="{$entitiesName}List"
+            :items="{$entitiesName}"
             :items-per-page="5"
             :headers="headers"
             :single-select="true"
             expand
             item-key="id"
-            @click:row="edit{$entityName}"
+            @click:row="edit{$className}"
           >
           </v-data-table>
         </v-card>
@@ -44,14 +44,13 @@ export default {
     InertiaButton
   },
   props: {
-    donors: Array,
-    phoneTypes: Array,
+    {$entityName}: Array,
     filters: Object
   },
   computed: {
     headers: function() {
       return [
-          {$tableColData}
+{$tableColData}
       ];
     }
   },

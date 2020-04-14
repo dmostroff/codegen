@@ -1,0 +1,175 @@
+<?php
+
+namespace GenerateEntity;
+
+class CodeTemplatorVue extends CodeTemplator
+{
+    /**
+     * Vue templates
+     */
+    const VUE_TEMPLATE_DIR = '.\Templates\Vue';
+
+    const VUE_DATATYPES = [
+        'varchar' => 'string',
+        'text' => 'string',
+        'date' => 'attr',
+        'datetime' => 'attr',
+        'int' => 'number',
+        'float' => 'number',
+    ];
+
+    public function instantiateParts()
+    {
+        $className = $this->getClassName($this->tableName);
+        $vueModel = $this->genVueModel($this->tableName);
+        TemplatorWriter::writeVueModel($this->parentName, $className, $vueModel);
+        $vueIndex = $this->genVueIndex($this->tableName);
+        TemplatorWriter::writeVuePage($this->parentName, $className, 'Index', $vueIndex);
+        $vueEdit = $this->genVueEdit($this->tableName);
+        TemplatorWriter::writeVuePage($this->parentName, $className, 'Edit', $vueEdit);
+        $vueCreate = $this->genVueCreate($this->tableName);
+        TemplatorWriter::writeVuePage($this->parentName, $className, 'Create', $vueCreate);
+        $vueEntityForm = $this->genVueEntityForm($this->tableName);
+        TemplatorWriter::writeVuePage($this->parentName, $className, $className . 'Form', $vueEntityForm);
+    }
+
+    protected static function getTemplateFileName($filename) : string
+    {
+        return implode(DIRECTORY_SEPARATOR, [self::VUE_TEMPLATE_DIR, $filename]);
+    }
+
+    private function getVueColumns($cols)
+    {
+        $colData = array_map(fn ($col) => $this->getVueColumn($col), $this->entitiesData);
+        return implode(",\n", $colData);
+    }
+
+    private function getVueColumn($col)
+    {
+        $fmt = "%12s%s: this.%s()";
+        if ($col['AUTO_INCREMENT'] == 'auto_increment') {
+            return sprintf($fmt, '', $col['COLUMN_NAME'], 'uid');
+        }
+        return sprintf($fmt, '', self::toCamelCase($col['COLUMN_NAME'], true), self::VUE_DATATYPES[$col['DATA_TYPE']]);
+    }
+
+    public function genVueModel()
+    {
+        $className = self::getClassName($this->tableName);
+        $entityName = self::getEntityName($this->tableName);
+        $colData = $this->getVueColumns($this->entitiesData);
+        $tmplt = <<<EOT
+import { Model } from '@vuex-orm/core'
+
+export default class $className extends Model {
+    static entity = '$entityName'
+
+    static fields () {
+        return {
+$colData
+        }
+    }
+}
+
+EOT;
+        return $tmplt;
+    }
+
+    private function substituteVueTemplate($templateFile, $aPatterns, $aReplacements)
+    {
+        $className = self::getClassName($this->tableName);
+        $title = self::plural($className);
+        $entityName = self::getEntityName($this->tableName);
+        $entitiesName = self::plural($entityName);
+
+        $basePattern = [
+            self::escapePattern('className'),
+            self::escapePattern('title'),
+            self::escapePattern('entitiesName'),
+            self::escapePattern('entityName')
+        ];
+        $patterns = array_merge($basePattern, $aPatterns);
+        $replacements = array_merge([$className, $title, $entitiesName, $entityName], $aReplacements);
+        return self::replaceTemplate( $patterns, $replacements, self::getTemplateFileName($templateFile));
+    }
+
+    public function genVueIndex()
+    {
+        $tableColData = $this->getVueIndexColumns($this->entitiesData);
+        $indexFile = $this->substituteVueTemplate(['/\{\$tableColData\}/'], [$tableColData], 'index.vue.txt');
+        return $indexFile;
+    }
+
+    private function getVueIndexColumns($cols)
+    {
+        $colData = array_map(fn ($col) => $this->getVueIndexColumn($col), $this->entitiesData);
+        return implode(",\n", $colData);
+    }
+
+    private function getVueIndexColumn($col)
+    {
+        $fmt = <<<EOT
+        {
+            text: this.\$i18n.t("%s.%s"),
+            value: "%s",
+            sortable: true
+EOT;
+        if (self::VUE_DATATYPES[$col['DATA_TYPE']] == 'number') {
+            $fmt .= <<<EOT
+,
+            align: "end",
+            width: "45"
+EOT;
+        }
+        $fmt .= <<<EOT
+
+        }
+EOT;
+        return sprintf(
+            $fmt,
+            self::getEntityName($this->tableName),
+            self::toCamelCase($col['COLUMN_NAME'], true),
+            self::toCamelCase($col['COLUMN_NAME'], true)
+        );
+    }
+
+    public function genVueEdit()
+    {
+        //$tableColData = $this->getVueColumns($this->entitiesData);
+        return $this->substituteVueTemplate('edit.vue.txt', [], []);
+    }
+
+    public function genVueCreate()
+    {
+        //$tableColData = $this->getVueColumns($this->entitiesData);
+        return $this->substituteVueTemplate('create.vue.txt', [], []);
+    }
+
+    private function getVueTextInputFields($cols)
+    {
+        $template = file_get_contents(self::getTemplateFileName('text-input.vue.txt'));
+        $entityName = $this->getEntityName($this->tableName);
+        $patterns = [
+            self::escapePattern('entityName'),
+            self::escapePattern('colName'),
+            self::escapePattern('colLabel')
+        ];
+        $textInputs = array_map(function ($col) use ($template, $entityName, $patterns) {
+            $replace = [$entityName, $col['COLUMN_NAME'], ucwords(str_replace('_', ' ', $col['COLUMN_NAME']))];
+            return preg_replace($patterns, $replace, $template);
+        }, $cols);
+        return implode("\n", $textInputs);
+    }
+    public function genVueEntityForm()
+    {
+        //        $cols = $this->entitiesData[$this->parentName][$this->tableName];
+        $textInputFields = $this->getVueTextInputFields($this->entitiesData);
+        $entityFormFile = $this->substituteVueTemplate(
+            'entityForm.vue.txt',
+            [self::escapePattern('textInputFields'), self::escapePattern('hasManyManager')],
+            [$textInputFields, '']
+        );
+        return $entityFormFile;
+    }
+
+}

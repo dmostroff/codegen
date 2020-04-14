@@ -5,7 +5,7 @@
         "AppRoot": "app",
         "ResourceRoot": "resources\\js"
     },
-    "ProjectData": {
+    "Entities": {
         "User": {
             "user_settting": {
                  "user_id": [ "int" ],

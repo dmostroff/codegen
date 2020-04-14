@@ -5,7 +5,7 @@
         "AppRoot": "app",
         "ResourceRoot": "resources\\js"
     },
-    "ProjectData": {
+    "entitiesData": {
         "User": {
             "user_settting": [
                 {

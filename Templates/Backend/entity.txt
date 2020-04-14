@@ -1,0 +1,20 @@
+<?php
+
+namespace {$namespace};
+
+use Carbon\Carbon;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Illuminate\Support\Collection;
+use Support\GettersAndSetters;
+
+/**
+{$methods}
+*/
+class {$entityName}
+{
+    use GettersAndSetters;
+    use TimestampableEntity;
+
+{$props}
+}
