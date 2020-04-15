@@ -1,8 +1,8 @@
 <?php
 
-namespace {$namespace};
+namespace Domain\{$parentName}\Mappings;
 
-use {$useEntity};
+use Domain\{$parentName}\Entities\{$className}
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
 

@@ -4,7 +4,7 @@
       <v-col cols="10" align-center justify-start class="display-1">{{$t("{$entityName}.heading")}}</v-col>
       <v-col class="pr-4" justify-end align-center>
         <v-btn small color="primary" block="true"
-          href="${entitiesName}/create"
+          href="{$entitiesName}/create"
         >{{$t('action.create')}} {{ $t('{$entityName}.heading')}} </v-btn>
       </v-col>
     </v-row>

@@ -10,7 +10,6 @@ use GenerateEntity\MetaDataReader;
 
 class GeneratorService
 {
-    private $metaDataReader;
     private $metaData;
     public function init(string $jsonFilename): GeneratorService
     {
@@ -24,12 +23,14 @@ class GeneratorService
 
     public function runBackend(): GeneratorService
     {
+        echo "\n" . __FUNCTION__ . "\n";
         (new CodeTemplatorBackend($this->metaData['Entities']))->instantiate();
         return $this;
     }
 
     public function runVue(): GeneratorService
     {
+        echo "\n" . __FUNCTION__ . "\n";
         (new CodeTemplatorVue($this->metaData['Entities']))->instantiate();
         return $this;
     }

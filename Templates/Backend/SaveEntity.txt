@@ -1,24 +1,24 @@
 <?php
 
 
-namespace Domain\{$className}\Actions;
+namespace Domain\{$parentName}\Actions;
 
-use Admin\{$className}\Queries\{$className}SaveQuery;
-use Domain\{$className}\DTO\{$className}DTO;
-use Domain\{$className}\Transformers\{$className}Transformer;
+use Admin\{$parentName}\Queries\{$className}SaveQuery;
+use Domain\{$parentName}\DTO\{$classNameDTO};
+use Domain\{$parentName}\Transformers\{$className}Transformer;
 
 class Save{$className}
 {
-    private ${$entityName}Dto;
+    private ${$entityNameDto};
 
-    function __construct ({$className}DTO ${$entityName}Dto)
+    function __construct ({$classNameDTO} ${$entityNameDto})
     {
-        $this->{$entityName}Dto = ${$entityName}Dto;
+        $this->{$entityNameDto} = ${$entityNameDto};
     }
 
     public function handle ()
     {
-        ${$entityName} = {$className}Transformer::transformDTOToEntity($this->{$entityName}Dto);
+        ${$entityName} = {$className}Transformer::transformDTOToEntity($this->{$entityNameDto});
         {$className}SaveQuery::execute(${$entityName});
 
         return ${$entityName};

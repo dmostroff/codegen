@@ -35,23 +35,7 @@ class TemplatorWriter
     /**
      * Backend
      */
-    public static function writeEntity( string $parentName, string $className, string $outString)
-    {
-        self::writeClassFile( $parentName, "Entities", $className, "", $outString);
-    }
-    public static function writeEntityDTO( string $parentName, string $className, string $outString)
-    {
-        self::writeClassFile( $parentName, "DTO", $className, "", $outString);
-    }
-    public static function writeTransformer( string $parentName, string $className, string $outString)
-    {
-        self::writeClassFile( $parentName, "Transformers", $className, "Tansformer", $outString);
-    }
-    public static function writeMapping( string $parentName, string $className, string $outString)
-    {
-        self::writeClassFile( $parentName, "Mappings", $className, "Mapping", $outString);
-    }
-    private static function writeClassFile( string $parentName, $directory, string $className, string $entityRole, string $outString)
+    public static function writeClassFile( string $parentName, $directory, string $className, string $entityRole, string $outString)
     {
         $fullpath = implode( DIRECTORY_SEPARATOR, [self::$projectRoot, self::$appRoot, 'Domain', $parentName, $directory]);
         if (!file_exists($fullpath)) { 
@@ -61,20 +45,7 @@ class TemplatorWriter
         file_put_contents($fileOut, $outString);
     }
 
-    /**
-     * Vue templates
-     */
-    public static function writeVuePage( $parentName, string $className, string $viewName, string $outString)
-    {
-        self::writeResourceFile( $parentName, "Page", $className, $viewName, $outString);
-    }
-    public static function writeVueModel( $parentName, string $className, string $outString)
-    {
-        self::writeResourceFile( $parentName, "Model", $className, $className, $outString);
-    }
-
-
-    private static function writeResourceFile( string $parentName, $directory, string $className, $viewName, string $outString)
+    public static function writeResourceFile( $directory, string $className, $viewName, string $outString)
     {
         $fullpath = implode( DIRECTORY_SEPARATOR, [self::$projectRoot, self::$resourceRoot, $directory, $className]);
         if (!file_exists($fullpath)) { 

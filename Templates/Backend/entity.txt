@@ -1,6 +1,6 @@
 <?php
 
-namespace {$namespace};
+namespace Domain\{$parentName}\Entities;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;

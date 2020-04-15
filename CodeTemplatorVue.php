@@ -22,18 +22,54 @@ class CodeTemplatorVue extends CodeTemplator
     {
         $className = $this->getClassName($this->tableName);
         $vueModel = $this->genVueModel($this->tableName);
-        TemplatorWriter::writeVueModel($this->parentName, $className, $vueModel);
+        $this->writeVueModel($className, $vueModel);
         $vueIndex = $this->genVueIndex($this->tableName);
-        TemplatorWriter::writeVuePage($this->parentName, $className, 'Index', $vueIndex);
+        $this->writeVuePage($className, 'Index', $vueIndex);
         $vueEdit = $this->genVueEdit($this->tableName);
-        TemplatorWriter::writeVuePage($this->parentName, $className, 'Edit', $vueEdit);
+        $this->writeVuePage($className, 'Edit', $vueEdit);
         $vueCreate = $this->genVueCreate($this->tableName);
-        TemplatorWriter::writeVuePage($this->parentName, $className, 'Create', $vueCreate);
+        $this->writeVuePage($className, 'Create', $vueCreate);
         $vueEntityForm = $this->genVueEntityForm($this->tableName);
-        TemplatorWriter::writeVuePage($this->parentName, $className, $className . 'Form', $vueEntityForm);
+        $this->writeVuePage($className, $className . 'Form', $vueEntityForm);
     }
 
-    protected static function getTemplateFileName($filename) : string
+    public function genVueIndex()
+    {
+        $tableColData = $this->getVueIndexColumns($this->entitiesData);
+        $indexFile = $this->substituteTemplate(
+            $this->getTemplateFileName('index.vue.txt'),
+            ['/\{\$tableColData\}/'],
+            [$tableColData]
+        );
+        return $indexFile;
+    }
+
+    public function genVueEdit()
+    {
+        echo __FUNCTION__ . "\n";
+        return $this->substituteTemplate($this->getTemplateFileName('edit.vue.txt'));
+    }
+
+    public function genVueCreate()
+    {
+        echo __FUNCTION__ . "\n";
+        return $this->substituteTemplate($this->getTemplateFileName('create.vue.txt'));
+    }
+
+    public function genVueEntityForm()
+    {
+        echo __FUNCTION__ . "\n";
+        $textInputFields = $this->getVueTextInputFields($this->entitiesData);
+        $entityFormFile = $this->substituteTemplate(
+            $this->getTemplateFileName('entityForm.vue.txt'),
+            [self::escapePattern('textInputFields'), self::escapePattern('hasManyManager')],
+            [$textInputFields, ''],
+
+        );
+        return $entityFormFile;
+    }
+
+    protected function getTemplateFileName($filename): string
     {
         return implode(DIRECTORY_SEPARATOR, [self::VUE_TEMPLATE_DIR, $filename]);
     }
@@ -75,31 +111,6 @@ EOT;
         return $tmplt;
     }
 
-    private function substituteVueTemplate($templateFile, $aPatterns, $aReplacements)
-    {
-        $className = self::getClassName($this->tableName);
-        $title = self::plural($className);
-        $entityName = self::getEntityName($this->tableName);
-        $entitiesName = self::plural($entityName);
-
-        $basePattern = [
-            self::escapePattern('className'),
-            self::escapePattern('title'),
-            self::escapePattern('entitiesName'),
-            self::escapePattern('entityName')
-        ];
-        $patterns = array_merge($basePattern, $aPatterns);
-        $replacements = array_merge([$className, $title, $entitiesName, $entityName], $aReplacements);
-        return self::replaceTemplate( $patterns, $replacements, self::getTemplateFileName($templateFile));
-    }
-
-    public function genVueIndex()
-    {
-        $tableColData = $this->getVueIndexColumns($this->entitiesData);
-        $indexFile = $this->substituteVueTemplate(['/\{\$tableColData\}/'], [$tableColData], 'index.vue.txt');
-        return $indexFile;
-    }
-
     private function getVueIndexColumns($cols)
     {
         $colData = array_map(fn ($col) => $this->getVueIndexColumn($col), $this->entitiesData);
@@ -133,18 +144,6 @@ EOT;
         );
     }
 
-    public function genVueEdit()
-    {
-        //$tableColData = $this->getVueColumns($this->entitiesData);
-        return $this->substituteVueTemplate('edit.vue.txt', [], []);
-    }
-
-    public function genVueCreate()
-    {
-        //$tableColData = $this->getVueColumns($this->entitiesData);
-        return $this->substituteVueTemplate('create.vue.txt', [], []);
-    }
-
     private function getVueTextInputFields($cols)
     {
         $template = file_get_contents(self::getTemplateFileName('text-input.vue.txt'));
@@ -160,16 +159,16 @@ EOT;
         }, $cols);
         return implode("\n", $textInputs);
     }
-    public function genVueEntityForm()
+    /**
+     * Vue templates
+     */
+    private function writeVuePage(string $className, string $viewName, string $outString)
     {
-        //        $cols = $this->entitiesData[$this->parentName][$this->tableName];
-        $textInputFields = $this->getVueTextInputFields($this->entitiesData);
-        $entityFormFile = $this->substituteVueTemplate(
-            'entityForm.vue.txt',
-            [self::escapePattern('textInputFields'), self::escapePattern('hasManyManager')],
-            [$textInputFields, '']
-        );
-        return $entityFormFile;
+        TemplatorWriter::writeResourceFile("Pages", $className, $viewName, $outString);
     }
-
+    private function writeVueModel(string $className, string $outString)
+    {
+        $subDirectory = implode( DIRECTORY_SEPARATOR, [$this->parentName, $className]);
+        TemplatorWriter::writeResourceFile("Models", $subDirectory, $className, $outString);
+    }
 }

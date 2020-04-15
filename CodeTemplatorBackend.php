@@ -32,24 +32,123 @@ class CodeTemplatorBackend extends CodeTemplator
     {
         $className = $this->getClassName($this->tableName);
         $entity = $this->genEntity($this->tableName);
-        TemplatorWriter::writeEntity($this->parentName, $className, $entity);
+        $this->writeEntity($className, $entity);
         $entity = $this->genEntityDTO($this->tableName);
-        TemplatorWriter::writeEntityDTO($this->parentName, $className, $entity);
+        $this->writeEntityDTO($className, $entity);
         $entity = $this->genMappings($this->tableName);
-        TemplatorWriter::writeMapping($this->parentName, $className, $entity);
+        $this->writeMapping($className, $entity);
         $entity = $this->genTransformer($this->tableName);
-        TemplatorWriter::writeTransformer($this->parentName, $className, $entity);
+        $this->writeTransformer($className, $entity);
+        $entity = $this->genTransformer($this->tableName);
+        $this->writeTransformer( $className, $entity);
+        $entity = $this->genTransformer($this->tableName);
+        $this->writeTransformer($className, $entity);
     }
 
+    public function genEntity($tableName)
+    {
+        echo __FUNCTION__ . "\n";
+        $patterns = [
+            self::escapePattern('methods'),
+            self::escapePattern('props'),
+        ];
 
-    protected static function getTemplateFileName($filename): string
+        $replacements = [
+            $this->genMethodsComments(),
+            $this->genProperties()
+        ];
+
+        return $this->substituteTemplate($this->getTemplateFileName('entity.txt'), $patterns, $replacements);
+    }
+
+    public function genEntityDTO($tableName)
+    {
+        echo __FUNCTION__ . "\n";
+        $patterns = [
+            self::escapePattern('entityNameDTO'),
+            self::escapePattern('methods'),
+            self::escapePattern('props'),
+        ];
+
+        $replacements = [
+            $this->getEntityName($tableName) . 'Dto',
+            $this->genMethodsComments(),
+            $this->genProperties()
+        ];
+
+        return $this->substituteTemplate($this->getTemplateFileName('entityDTO.txt'), $patterns, $replacements);
+    }
+
+    public function genMappings()
+    {
+        echo __FUNCTION__ . "\n";
+        $patterns = [
+            self::escapePattern('mappingEntries')
+        ];
+
+        $replacements = [
+            $this->getMappingEntries()
+        ];
+
+        return $this->substituteTemplate($this->getTemplateFileName('entityMapping.txt'), $patterns, $replacements);
+    }
+
+    public function genTransformer()
+    {
+        echo __FUNCTION__ . "\n";
+        $classNameDTO = $this->getClassName($this->tableName) . 'DTO';
+        $entityNameDTO = $this->getEntityName($this->tableName) . 'Dto';
+        $tEntityToView = $this->getTransformEntityToView();
+        $tRequestToDTO = $this->getTransformRequestToDTO($entityNameDTO);
+        $tDTOToEntity = $this->getTransformDTOToEntity($entityNameDTO);
+
+        $patterns = [
+            self::escapePattern('classNameDTO'),
+            self::escapePattern('entityNameDTO'),
+            self::escapePattern('tEntityToView'),
+            self::escapePattern('tRequestToDTO'),
+            self::escapePattern('tDTOToEntity')
+        ];
+        $replacements = [
+            $classNameDTO,
+            $entityNameDTO,
+            $tEntityToView,
+            $tRequestToDTO,
+            $tDTOToEntity
+        ];
+
+        return $this->substituteTemplate($this->getTemplateFileName('entityTransformer.txt'), $patterns, $replacements);
+    }
+
+    public function genActionSave()
+    {
+        echo __FUNCTION__ . "\n";
+        $patterns = [
+            self::escapePattern('entityNameDto'),
+        ];
+        $replacements = [
+            $this->getEntityName($this->tableName) . 'Dto'
+        ];
+
+        return $this->substituteTemplate($this->getTemplateFileName('SaveEntity.txt'), $patterns, $replacements);
+    }
+
+    public function genActionUpdate()
+    {
+        echo __FUNCTION__ . "\n";
+        $patterns = [
+            self::escapePattern('entityNameDto'),
+        ];
+        $replacements = [
+            $this->getEntityName($this->tableName) . 'Dto'
+        ];
+
+        return $this->substituteTemplate($this->getTemplateFileName('UpdateEntity.txt'), $patterns, $replacements);
+    }
+
+    protected function getTemplateFileName($filename): string
     {
         return implode(DIRECTORY_SEPARATOR, [self::BACKEND_TEMPLATE_DIR, $filename]);
-    }
-
-    public function getAppNamespace($appPart)
-    {
-        return sprintf('Domain\%s\%s', $this->parentName, $appPart);
     }
 
     public function filterColumns($entitiesData)
@@ -68,10 +167,8 @@ class CodeTemplatorBackend extends CodeTemplator
     {
         return sprintf('set%s(%s)', self::toCamelCase($colName), $arg);
     }
-    private function mapDataTypes($dataType)
-    {
-    }
-    public function genProperties()
+
+    private function genProperties()
     {
         $fmt = "%4sprotected %s \$%s;";
         $props = array_map(fn ($col) => sprintf($fmt, '', self::DATATYPES[$col['DATA_TYPE']], self::toCamelCase($col['COLUMN_NAME'], true)), $this->entitiesData);
@@ -85,57 +182,6 @@ class CodeTemplatorBackend extends CodeTemplator
         return implode("\n", $methods);
     }
 
-    /**
-     * Entity
-     */
-    public function genEntity($tableName)
-    {
-        $patterns = [
-            self::escapePattern('namespace'),
-            self::escapePattern('entityName'),
-            self::escapePattern('methods'),
-            self::escapePattern('props'),
-        ];
-
-        $replacements = [
-            $this->getAppNamespace('Entities'),
-            $this->getEntityName($tableName),
-            $this->genMethodsComments(),
-            $this->genProperties()
-        ];
-
-        $templateFile = self::getTemplateFileName('entity.txt');
-        return self::replaceTemplate($patterns, $replacements, $templateFile);
-    }
-
-
-    /**
-     * Entity
-     */
-    public function genEntityDTO($tableName)
-    {
-        $patterns = [
-            self::escapePattern('namespace'),
-            self::escapePattern('entityNameDTO'),
-            self::escapePattern('methods'),
-            self::escapePattern('props'),
-        ];
-
-        $replacements = [
-            $this->getAppNamespace('DTO'),
-            $this->getEntityName($tableName) . 'DTO',
-            $this->genMethodsComments(),
-            $this->genProperties()
-        ];
-
-        $templateFile = self::getTemplateFileName('entityDTO.txt');
-        return self::replaceTemplate($patterns, $replacements, $templateFile);
-    }
-
-
-    /**
-     * Mappings
-     */
     private function getMappingEntries()
     {
         $line = array_map(fn ($col) => sprintf("%8s%s;", '', $this->getMappingEntry($col)), $this->entitiesData);
@@ -162,31 +208,6 @@ class CodeTemplatorBackend extends CodeTemplator
         return $retval;
     }
 
-    public function genMappings()
-    {
-        $patterns = [
-            self::escapePattern('namespace'),
-            self::escapePattern('className'),
-            self::escapePattern('entityName'),
-            self::escapePattern('useEntity'),
-            self::escapePattern('mappingEntries')
-        ];
-
-        $replacements = [
-            $this->getAppNamespace('Mappings'),
-            self::getClassesName($this->tableName),
-            $this->getEntityName($this->tableName),
-            sprintf("Domain\%s\Entities\%s", $this->parentName, $this->getEntityName($this->tableName)),
-            $this->getMappingEntries()
-        ];
-
-        $templateFile = self::getTemplateFileName('entityMapping.txt');
-        return self::replaceTemplate($patterns, $replacements, $templateFile);
-    }
-
-    /**
-     * Transformations
-     */
     private function getTransformEntityToView()
     {
         $sq = "'";
@@ -213,43 +234,24 @@ class CodeTemplatorBackend extends CodeTemplator
         return trim(implode("\n", $line));
     }
 
-    public function genTransformer()
+    public function writeEntity( string $className, string $outString)
     {
-        $namespace = $this->getAppNamespace('Transformers');
-        $entityName = $this->getEntityName($this->tableName);
-        $className = $this->getClassName($this->tableName);
-        $entityNameDTO = $entityName . 'DTO';
-        $classNameDTO = $className . 'DTO';
-        $tEntityToView = $this->getTransformEntityToView();
-        $tRequestToDTO = $this->getTransformRequestToDTO($entityNameDTO);
-        $tDTOToEntity = $this->getTransformDTOToEntity($entityNameDTO);
-
-        $useEntity = sprintf("Domain\%s\Entities\%s", $this->parentName, $className);
-        $useEntityDTO = sprintf("Domain\%s\DTO\%s", $this->parentName, $classNameDTO);
-        $patterns = [
-            self::escapePattern('namespace'),
-            self::escapePattern('useEntity'),
-            self::escapePattern('useEntityDTO'),
-            self::escapePattern('className'),
-            self::escapePattern('classNameDTO'),
-            self::escapePattern('entityNameDTO'),
-            self::escapePattern('tEntityToView'),
-            self::escapePattern('tRequestToDTO'),
-            self::escapePattern('tDTOToEntity')
-        ];
-        $replacements = [
-            $namespace,
-            $useEntity,
-            $useEntityDTO,
-            $className,
-            $classNameDTO,
-            $entityNameDTO,
-            $tEntityToView,
-            $tRequestToDTO,
-            $tDTOToEntity
-        ];
-
-        $templateFile = self::getTemplateFileName('entityTransformer.txt');
-        return self::replaceTemplate($patterns, $replacements, $templateFile);
+        TemplatorWriter::writeClassFile( $this->parentName, "Entities", $className, "", $outString);
+    }
+    public function writeEntityDTO( string $className, string $outString)
+    {
+        TemplatorWriter::writeClassFile( $this->parentName, "DTO", $className, "", $outString);
+    }
+    public function writeMapping( string $className, string $outString)
+    {
+        TemplatorWriter::writeClassFile( $this->parentName, "Mappings", $className, "Mapping", $outString);
+    }
+    public function writeTransformer( string $className, string $outString)
+    {
+        TemplatorWriter::writeClassFile( $this->parentName, "Transformers", $className, "Tansformer", $outString);
+    }
+    public function writeAction( string $className, string $outString)
+    {
+        TemplatorWriter::writeClassFile( $this->parentName, "Actions", $className, "", $outString);
     }
 }

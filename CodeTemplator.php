@@ -31,13 +31,39 @@ class CodeTemplator implements CodeTemplatorInterface
         return;
     }
 
-    protected function replaceTemplate( $patterns, $replacements, $templateFile)
+    protected static function replaceTemplate( $patterns, $replacements, $templateFile)
     {
         $template = file_get_contents($templateFile);
         return preg_replace($patterns, $replacements, $template);
     }
 
-    protected static function getTemplateFileName($filename) : string
+    protected function substituteTemplate($templateFile, $aPatterns = null, $aReplacements = null)
+    {
+        $className = self::getClassName($this->tableName);
+        $title = self::plural($className);
+        $entityName = self::getEntityName($this->tableName);
+        $entitiesName = self::plural($entityName);
+
+        $basePattern = [
+            self::escapePattern('parentName'),
+            self::escapePattern('className'),
+            self::escapePattern('entitiesName'),
+            self::escapePattern('entityName'),
+            self::escapePattern('title'),
+        ];
+        $patterns = array_merge($basePattern, $aPatterns??[]);
+        $baseReplacements = [
+            $this->parentName,
+            $className,
+            $entitiesName,
+            $entityName,
+            $title,
+        ];
+        $replacements = array_merge($baseReplacements, $aReplacements??[]);
+        return self::replaceTemplate( $patterns, $replacements, $templateFile);
+    }
+
+    protected function getTemplateFileName($filename) : string
     {
         return '';
     }
