@@ -7,7 +7,7 @@
     },
     "Entities": {
         "User": {
-            "user_settting": {
+            "user_setting": {
                  "user_id": [ "int" ],
                  "prefix": [ "varchar", 32, null, "SYS"],
                  "key_name": [ "varchar", 32],

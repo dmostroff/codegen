@@ -1,0 +1,176 @@
+{
+    "Project": {
+        "Name": "chesedcare",
+        "ProjectRoot": "C:\\Projects\\xyz",
+        "AppRoot": "app",
+        "ResourceRoot": "resources\\js"
+    },
+    "Entities": {
+        "Staff": {
+            "DepartmentGroup": {
+                "name": [
+                    "varchar",
+                    64
+                ],
+                "rank": [
+                    "int"
+                ],
+                "info": [
+                    "text",
+                    null
+                ],
+                "departments": [
+                    "Department",
+                    null,
+                    null,
+                    null,
+                    "hasMany"
+                ]
+            },
+            "Department": {
+                "group": [
+                    "DepartmentGroup",
+                    null,
+                    null,
+                    null,
+                    "belongsTo"
+                ],
+                "name": [
+                    "varchar",
+                    64
+                ],
+                "rank": [
+                    "int"
+                ],
+                "info": [
+                    "text",
+                    null
+                ],
+                "departmentRoles": [
+                    "DepartmentRole",
+                    null,
+                    null,
+                    null,
+                    "hasMany"
+                ]
+            },
+            "DepartmentRole": {
+                "department": [
+                    "Department",
+                    null,
+                    null,
+                    null,
+                    "belongsTo"
+                ],
+                "name": [
+                    "varchar",
+                    64
+                ],
+                "rank": [
+                    "int"
+                ],
+                "notes": [
+                    "text",
+                    null,
+                    null
+                ]
+            },
+            "Employee": {
+                "employeeStatus": [
+                    "varchar",
+                    32,
+                    "YES"
+                ],
+                "employeeType": [
+                    "varchar",
+                    32,
+                    "YES"
+                ],
+                "employeeRef": [
+                    "varchar",
+                    32,
+                    "YES"
+                ],
+                "idNumber": [
+                    "varchar",
+                    32,
+                    "YES"
+                ],
+                "startDate": [
+                    "date",
+                    null,
+                    "YES"
+                ],
+                "endDate": [
+                    "date",
+                    null,
+                    "YES"
+                ],
+                "deletedAt": [
+                    "datetime",
+                    null,
+                    "YES"
+                ],
+                "contractSigned": [
+                    "boolean",
+                    null,
+                    "YES"
+                ],
+                "departmentRole": [
+                    "DepartmentRole",
+                    "employees",
+                    null,
+                    null,
+                    "hasOne"
+                ]
+            },
+            "EmployeeAccount": {
+                "employee": [
+                    "Employee",
+                    null,
+                    null,
+                    null,
+                    "belongsTo"
+                ],
+                "account_number": [
+                    "varchar",
+                    24
+                ],
+                "sort_code": [
+                    "text",
+                    null,
+                    "YES"
+                ],
+                "account_name": [
+                    "varchar",
+                    128
+                ],
+                "bank_name": [
+                    "varchar",
+                    255
+                ],
+                "bank_branch": [
+                    "varchar",
+                    128
+                ],
+                "contracted_hours": [
+                    "float",
+                    null,
+                    "YES"
+                ],
+                "department": [
+                    "Department",
+                    null,
+                    "YES",
+                    null,
+                    "hasOne"
+                ],
+                "pay_method": [
+                    "text",
+                    null,
+                    "YES"
+                ]
+            }
+        }
+    }
+}

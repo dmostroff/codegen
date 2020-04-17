@@ -52,7 +52,7 @@ class MetaDataReader
             'LENGTH' =>  (count($cols) > 1) ? $cols[1] : 32,
             'IS_NULLABLE' =>  (count($cols) > 2 && $cols[2] == 'YES') ? 'YES' : null,
             'DEFAULT' => (count($cols) > 3) ? $cols[3] : null,
-            'AUTO_INCREMENT' => (count($cols) > 4) ? $cols[4] : null
+            'EXTRA' => (count($cols) > 4) ? $cols[4] : null
         ];
     }
    

@@ -2,11 +2,11 @@
 
 namespace Domain\{$parentName}\Mappings;
 
-use Domain\{$parentName}\Entities\{$className}
+use Domain\{$parentName}\Entities\{$className};
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
 
-class ContactAddressMapping extends EntityMapping
+class {$className}Mapping extends EntityMapping
 {
     /**
      * @return string
@@ -17,9 +17,9 @@ class ContactAddressMapping extends EntityMapping
     }
 
     /**
-     * @param Fluent \$builder
+     * @param Fluent $builder
      */
-    public function map(Fluent \$builder)
+    public function map(Fluent $builder)
     {
 {$mappingEntries}
     }

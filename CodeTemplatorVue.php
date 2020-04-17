@@ -83,7 +83,7 @@ class CodeTemplatorVue extends CodeTemplator
     private function getVueColumn($col)
     {
         $fmt = "%12s%s: this.%s()";
-        if ($col['AUTO_INCREMENT'] == 'auto_increment') {
+        if ($col['EXTRA'] == 'auto_increment') {
             return sprintf($fmt, '', $col['COLUMN_NAME'], 'uid');
         }
         return sprintf($fmt, '', self::toCamelCase($col['COLUMN_NAME'], true), self::VUE_DATATYPES[$col['DATA_TYPE']]);

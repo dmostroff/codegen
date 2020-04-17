@@ -4,8 +4,8 @@ namespace Domain\{$parentName}\Transformers;
 
 use Carbon\Carbon;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Domain\{$parentName}\Entities\{$className}
-use Domain\{$parentName}\Entities\{$classNameDTO}
+use Domain\{$parentName}\Entities\{$className};
+use Domain\{$parentName}\Entities\{$classNameDTO};
 use Illuminate\Foundation\Http\FormRequest;
 use Support\DTO\DTO;
 use Support\Entities\BaseEntity;
@@ -34,9 +34,9 @@ class {$className}Transformer extends BaseTransformer
         return $entityDTO;
     }
 
-    public static function transformDTOToEntity (DTO $entityDTO, {$classNameDTO} ${$entityNameDTO} = null): BaseEntity
+    public static function transformDTOToEntity (DTO ${$entityNameDTO}, {$className} ${$entityName} = null): BaseEntity
     {
-        $entity = ${$entityNameDTO} ?? new {$className}();
+        $entity = ${$entityName} ?? new {$className}();
         $entity{$tDTOToEntity}
             ;
 

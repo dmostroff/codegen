@@ -3,9 +3,8 @@
 
 namespace Domain\{$parentName}\Actions;
 
-use Domain\{$parentName}\DTO\{$className}DTO;
+use Domain\{$parentName}\DTO\{$classNameDTO};
 use Domain\{$parentName}\Entities\{$className};
-use Domain\{$parentName}\Entities\{$className}Address;
 use Domain\{$parentName}\Transformers\{$className}Transformer;
 use Domain\Common\Deleter\RelatedEntitiesDeleter;
 
