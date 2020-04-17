@@ -4,14 +4,14 @@
 namespace Domain\{$parentName}\Actions;
 
 use Admin\{$parentName}\Queries\{$className}SaveQuery;
-use Domain\{$parentName}\DTO\{$classNameDTO};
+use Domain\{$parentName}\DTO\{$classNameDto};
 use Domain\{$parentName}\Transformers\{$className}Transformer;
 
 class Save{$className}
 {
     private ${$entityNameDto};
 
-    function __construct ({$classNameDTO} ${$entityNameDto})
+    function __construct ({$classNameDto} ${$entityNameDto})
     {
         $this->{$entityNameDto} = ${$entityNameDto};
     }

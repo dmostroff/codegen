@@ -16,6 +16,7 @@ class CodeTemplatorVue extends CodeTemplator
         'datetime' => 'attr',
         'int' => 'number',
         'float' => 'number',
+        'boolean' => 'bool'
     ];
 
     public function instantiateParts()
@@ -86,7 +87,8 @@ class CodeTemplatorVue extends CodeTemplator
         if ($col['EXTRA'] == 'auto_increment') {
             return sprintf($fmt, '', $col['COLUMN_NAME'], 'uid');
         }
-        return sprintf($fmt, '', self::toCamelCase($col['COLUMN_NAME'], true), self::VUE_DATATYPES[$col['DATA_TYPE']]);
+        $dataType = array_key_exists($col['DATA_TYPE'], self::VUE_DATATYPES) ? self::VUE_DATATYPES[$col['DATA_TYPE']] : $col['DATA_TYPE'];
+        return sprintf($fmt, '', self::toCamelCase($col['COLUMN_NAME'], true), $dataType);
     }
 
     public function genVueModel()
@@ -125,7 +127,7 @@ EOT;
             value: "%s",
             sortable: true
 EOT;
-        if (self::VUE_DATATYPES[$col['DATA_TYPE']] == 'number') {
+        if (array_key_exists($col['DATA_TYPE'], self::VUE_DATATYPES) && self::VUE_DATATYPES[$col['DATA_TYPE']] == 'number') {
             $fmt .= <<<EOT
 ,
             align: "end",

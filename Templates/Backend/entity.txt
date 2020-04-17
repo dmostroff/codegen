@@ -11,7 +11,7 @@ use Support\GettersAndSetters;
 /**
 {$methods}
 */
-class {$entityName}
+class {$className}
 {
     use GettersAndSetters;
     use TimestampableEntity;

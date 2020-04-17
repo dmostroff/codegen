@@ -50,9 +50,9 @@ class CodeTemplatorBackend extends CodeTemplator
         $entity = $this->genTransformer($this->tableName);
         $this->writeTransformer($className, $entity);
         $entity = $this->genActionSave($this->tableName);
-        $this->writeAction($className, $entity);
+        $this->writeActionSave($className, $entity);
         $entity = $this->genActionUpdate($this->tableName);
-        $this->writeAction($className, $entity);
+        $this->writeActionUpdate($className, $entity);
     }
 
     public function genEntity($tableName)
@@ -134,9 +134,11 @@ class CodeTemplatorBackend extends CodeTemplator
     {
         echo __FUNCTION__ . "\n";
         $patterns = [
+            self::escapePattern('classNameDto'),
             self::escapePattern('entityNameDto'),
         ];
         $replacements = [
+            $this->getClassName($this->tableName) . 'Dto',
             $this->getEntityName($this->tableName) . 'Dto'
         ];
 
@@ -147,9 +149,11 @@ class CodeTemplatorBackend extends CodeTemplator
     {
         echo __FUNCTION__ . "\n";
         $patterns = [
+            self::escapePattern('classNameDto'),
             self::escapePattern('entityNameDto'),
         ];
         $replacements = [
+            $this->getClassName($this->tableName) . 'Dto',
             $this->getEntityName($this->tableName) . 'Dto'
         ];
 
@@ -320,8 +324,12 @@ class CodeTemplatorBackend extends CodeTemplator
     {
         TemplatorWriter::writeClassFile($this->parentName, "Transformers", $className, "Transformer", $outString);
     }
-    public function writeAction(string $className, string $outString)
+    public function writeActionSave(string $className, string $outString)
     {
-        TemplatorWriter::writeClassFile($this->parentName, "Actions", $className, "", $outString);
+        TemplatorWriter::writeClassFile($this->parentName, "Actions", $className, "Save", $outString);
+    }
+    public function writeActionUpdate(string $className, string $outString)
+    {
+        TemplatorWriter::writeClassFile($this->parentName, "Actions", $className, "Update", $outString);
     }
 }

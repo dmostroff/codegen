@@ -3,7 +3,7 @@
 
 namespace Domain\{$parentName}\Actions;
 
-use Domain\{$parentName}\DTO\{$classNameDTO};
+use Domain\{$parentName}\DTO\{$classNameDto};
 use Domain\{$parentName}\Entities\{$className};
 use Domain\{$parentName}\Transformers\{$className}Transformer;
 use Domain\Common\Deleter\RelatedEntitiesDeleter;
@@ -11,9 +11,9 @@ use Domain\Common\Deleter\RelatedEntitiesDeleter;
 class Update{$className}
 {
     private {$className} ${$entityName};
-    private {$classNameDTO} ${$entityNameDto};
+    private {$classNameDto} ${$entityNameDto};
 
-    function __construct ({$className} ${$entityName}, {$classNameDTO} ${$entityNameDto})
+    function __construct ({$className} ${$entityName}, {$classNameDto} ${$entityNameDto})
     {
         $this->{$entityName} = ${$entityName};
         $this->{$entityNameDto} = ${$entityNameDto};
@@ -27,7 +27,7 @@ class Update{$className}
 
         $del = new RelatedEntitiesDeleter('{$entityName}',$this->{$entityName});
 
-        $del->delete([{$deleteDependcies}]);
+        // $del->delete([{$deleteDepencies}]);
 
         $em->persist($this->{$entityName});
         $em->flush();
