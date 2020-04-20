@@ -7,12 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Illuminate\Support\Collection;
 use Support\GettersAndSetters;
+use Support\DTO\DTO;
 
 
 /**
 {$methods}
 */
-class {$entityNameDTO}
+class {$classNameDto} extends DTO
 {
     use GettersAndSetters;
     use TimestampableEntity;

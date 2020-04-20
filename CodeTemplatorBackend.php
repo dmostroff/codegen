@@ -44,7 +44,7 @@ class CodeTemplatorBackend extends CodeTemplator
         $entity = $this->genEntity($this->tableName);
         $this->writeEntity($className, $entity);
         $entity = $this->genEntityDTO($this->tableName);
-        $this->writeEntityDTO($className, $entity);
+        $this->writeEntityDTO($className . 'Dto', $entity);
         $entity = $this->genMappings($this->tableName);
         $this->writeMapping($className, $entity);
         $entity = $this->genTransformer($this->tableName);
@@ -75,18 +75,20 @@ class CodeTemplatorBackend extends CodeTemplator
     {
         echo __FUNCTION__ . "\n";
         $patterns = [
-            self::escapePattern('entityNameDTO'),
+            self::escapePattern('classNameDto'),
+            self::escapePattern('entityNameDto'),
             self::escapePattern('methods'),
             self::escapePattern('props'),
         ];
 
         $replacements = [
+            $this->getClassName($tableName) . 'Dto',
             $this->getEntityName($tableName) . 'Dto',
             $this->genMethodsComments(),
             $this->genProperties()
         ];
 
-        return $this->substituteTemplate($this->getTemplateFileName('entityDTO.txt'), $patterns, $replacements);
+        return $this->substituteTemplate($this->getTemplateFileName('entityDto.txt'), $patterns, $replacements);
     }
 
     public function genMappings()
@@ -106,22 +108,22 @@ class CodeTemplatorBackend extends CodeTemplator
     public function genTransformer()
     {
         echo __FUNCTION__ . "\n";
-        $classNameDTO = $this->getClassName($this->tableName) . 'DTO';
-        $entityNameDTO = $this->getEntityName($this->tableName) . 'Dto';
+        $classNameDto = $this->getClassName($this->tableName) . 'Dto';
+        $entityNameDto = $this->getEntityName($this->tableName) . 'Dto';
         $tEntityToView = $this->getTransformEntityToView();
-        $tRequestToDTO = $this->getTransformRequestToDTO($entityNameDTO);
-        $tDTOToEntity = $this->getTransformDTOToEntity($entityNameDTO);
+        $tRequestToDTO = $this->getTransformRequestToDTO($entityNameDto);
+        $tDTOToEntity = $this->getTransformDTOToEntity($entityNameDto);
 
         $patterns = [
-            self::escapePattern('classNameDTO'),
-            self::escapePattern('entityNameDTO'),
+            self::escapePattern('classNameDto'),
+            self::escapePattern('entityNameDto'),
             self::escapePattern('tEntityToView'),
             self::escapePattern('tRequestToDTO'),
             self::escapePattern('tDTOToEntity')
         ];
         $replacements = [
-            $classNameDTO,
-            $entityNameDTO,
+            $classNameDto,
+            $entityNameDto,
             $tEntityToView,
             $tRequestToDTO,
             $tDTOToEntity
@@ -179,7 +181,9 @@ class CodeTemplatorBackend extends CodeTemplator
 
     private function getSetter($col, $arg)
     {
-        $dataType = (in_array($col['EXTRA'] ?? '', self::DATA_RELATION)) ? "Collection" : self::DATATYPES[$col['DATA_TYPE']];
+        // $extra = array_key_exists('EXTRA', $col) ? $col['EXTRA'] : null;
+        // $dataType = array_key_exists($col['DATA_TYPE'], self::DATATYPES) ? self::DATATYPES[$col['DATA_TYPE']] : $col['DATA_TYPE'];
+        // $dataType = (in_array($extra, self::DATA_RELATION)) ? "array" : self::DATATYPES[$col['DATA_TYPE']];
         return sprintf('set%s(%s)', self::toCamelCase($col['COLUMN_NAME']), $arg);
     }
 
@@ -189,11 +193,17 @@ class CodeTemplatorBackend extends CodeTemplator
         // var_export($col);
         $map = [
             'hasOne' => $col['DATA_TYPE'],
-            'hasMany' => 'Collection',
+            'hasMany' => '',
             'null' => in_array( $col['DATA_TYPE'], self::DATATYPES) ? self::DATATYPES[$col['DATA_TYPE']] : $col['DATA_TYPE'],
             'auto_increment' => 'int'
         ];
-        return sprintf("%4sprotected %s \$%s;", '', $this->getDataType($col), self::toCamelCase($col['COLUMN_NAME'], true));
+        $dataType = $this->getDataType($col);
+        if( 'array' == $dataType) {
+            $dataType = '';
+        } else {
+            $dataType .= ' ';
+        }
+        return sprintf("%4sprotected %s\$%s;", '', $dataType, self::toCamelCase($col['COLUMN_NAME'], true));
     }
 
     private function genProperties()
@@ -225,7 +235,7 @@ class CodeTemplatorBackend extends CodeTemplator
         $defaultType = array_key_exists( $col['DATA_TYPE'], self::DATATYPES) ? self::DATATYPES[$col['DATA_TYPE']] : $col['DATA_TYPE'];
         $map = [
             'hasOne'         => $col['DATA_TYPE'],
-            'hasMany'        => 'Collection',
+            'hasMany'        => 'array',
             'auto_increment' => 'int'
         ];
         return array_key_exists($col['EXTRA'], $map) ? $map[$col['EXTRA']] : $defaultType;
@@ -236,7 +246,7 @@ class CodeTemplatorBackend extends CodeTemplator
         $defaultType = array_key_exists( $col['DATA_TYPE'], self::DATATYPE_MAPPING) ? self::DATATYPE_MAPPING[$col['DATA_TYPE']] : $col['DATA_TYPE'];
         $map = [
             'hasOne'         => $col['DATA_TYPE'],
-            'hasMany'        => 'Collection',
+            'hasMany'        => 'array',
             'auto_increment' => 'int'
         ];
         return array_key_exists($col['EXTRA'], $map) ? $map[$col['EXTRA']] : $defaultType;

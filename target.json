@@ -1,54 +1,3098 @@
-{
-    "Project": {
-        "Name": "chesedcare",
-        "ProjectRoot": "C:\\Projects\\chesedcare",
-        "AppRoot": "app",
-        "ResourceRoot": "resources\\js"
+[
+    {
+        "client_cases": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "created_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "updated_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "application_date": [
+                    "date",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "reference_number": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "language": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "referrer": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_state": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_submitted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_underwriting_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_approved_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_soft_approved_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_declined_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_soft_declined_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_negotiating_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "clientCaseState_closed_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
     },
-    "entitiesData": {
-        "User": {
-            "user_settting": [
-                {
-                    "COLUMN_NAME": "id",
-                    "DATA_TYPE": "int",
-                    "LENGTH": null,
-                    "IS_NULLABLE": null,
-                    "DEFAULT": null,
-                    "AUTO_INCREMENT": "auto_increment"
-                },
-                {
-                    "COLUMN_NAME": "user_id",
-                    "DATA_TYPE": "int",
-                    "LENGTH": 32,
-                    "IS_NULLABLE": null,
-                    "DEFAULT": null,
-                    "AUTO_INCREMENT": null
-                },
-                {
-                    "COLUMN_NAME": "prefix",
-                    "DATA_TYPE": "varchar",
-                    "LENGTH": 32,
-                    "IS_NULLABLE": null,
-                    "DEFAULT": "SYS",
-                    "AUTO_INCREMENT": null
-                },
-                {
-                    "COLUMN_NAME": "key_name",
-                    "DATA_TYPE": "varchar",
-                    "LENGTH": 32,
-                    "IS_NULLABLE": null,
-                    "DEFAULT": null,
-                    "AUTO_INCREMENT": null
-                },
-                {
-                    "COLUMN_NAME": "key_value",
-                    "DATA_TYPE": "text",
-                    "LENGTH": null,
-                    "IS_NULLABLE": "YES",
-                    "DEFAULT": null,
-                    "AUTO_INCREMENT": null
-                }
-            ]
-        }
+    {
+        "client_case_documents": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "client_case_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "client_case_doc_requirements": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "document_type_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "client_case_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "category": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "rank": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_required": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "min_number": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "client_case_submitters": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "created_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "updated_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "client_case_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "person_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'UNKNOWN'",
+                    ""
+                ]
+            },
+            {
+                "last_name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "first_name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "middle_name": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "title": [
+                    "varchar",
+                    16,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "dob": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "gender": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "'U'",
+                    ""
+                ]
+            },
+            {
+                "marital_status": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "address_line2": [
+                    "varchar",
+                    124,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "county": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "city": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "postcode": [
+                    "varchar",
+                    12,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "jurisdiction": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "phone": [
+                    "varchar",
+                    12,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "phone2": [
+                    "varchar",
+                    12,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "email": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "companies": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "company_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'UNKNOWN'",
+                    ""
+                ]
+            },
+            {
+                "company_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'UNKNOWN'",
+                    ""
+                ]
+            },
+            {
+                "industry": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "industry": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "founding_date": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "founding_date": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "number_of_partners": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "number_of_partners": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "number_of_employees": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "number_of_employees": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "months_in_business": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "months_in_business": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "company_bank_accounts": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "sort_code": [
+                    "varchar",
+                    11,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "sort_code": [
+                    "varchar",
+                    11,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "account_number": [
+                    "varchar",
+                    11,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "account_number": [
+                    "varchar",
+                    11,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_primary": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_primary": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "virtual_key": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "virtual_key": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "company_finances": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "annual_revenue": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "annual_revenue": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "monthly_revenue": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "monthly_revenue": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "personal_credit_score": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "personal_credit_score": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "personal_debt_to_credit_ratio": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "personal_debt_to_credit_ratio": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "net_operating_income": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "net_operating_income": [
+                    "double",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_owner_bankruptcy_or_i_v_a": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_owner_bankruptcy_or_i_v_a": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_resigned_director": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_resigned_director": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_previous_decline": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_previous_decline": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "contact_addresses": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "bank_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "donor_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "broker_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "address_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'BUSINESS'",
+                    ""
+                ]
+            },
+            {
+                "address_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'BUSINESS'",
+                    ""
+                ]
+            },
+            {
+                "is_current": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_current": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "street_number": [
+                    "varchar",
+                    16,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "street_number": [
+                    "varchar",
+                    16,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "street_name": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "street_name": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "address_line2": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "address_line2": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "county": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "county": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "city": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "city": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "state": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "postcode": [
+                    "varchar",
+                    12,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "postcode": [
+                    "varchar",
+                    12,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "jurisdiction": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "jurisdiction": [
+                    "varchar",
+                    64,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "contact_emails": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "broker_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "donor_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "email_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "email_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "email_address": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "email_address": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_default": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_default": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_confirmed": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_confirmed": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_receipt_read": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_receipt_read": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_protected": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_protected": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "contact_phones": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "broker_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "donor_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "phone_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "phone_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "phone_number": [
+                    "varchar",
+                    12,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "phone_number": [
+                    "varchar",
+                    12,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_primary": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_primary": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_confirmed": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_confirmed": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_soft_protect": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "is_soft_protect": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "protected_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "protected_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "departments": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "department_group_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "rank": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "info": [
+                    "longtext",
+                    4294967295,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "department_groups": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "rank": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "info": [
+                    "longtext",
+                    4294967295,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "department_roles": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "department_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "rank": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "notes": [
+                    "longtext",
+                    4294967295,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "donors": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "created_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "updated_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "person_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'UNKNOWN'",
+                    ""
+                ]
+            },
+            {
+                "last_name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "first_name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "middle_name": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "title": [
+                    "varchar",
+                    16,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "dob": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "gender": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "'U'",
+                    ""
+                ]
+            },
+            {
+                "marital_status": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "donor_documents": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "donor_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "employees": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "created_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "updated_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "department_role_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "person_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    "'UNKNOWN'",
+                    ""
+                ]
+            },
+            {
+                "last_name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "first_name": [
+                    "varchar",
+                    64,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "middle_name": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "title": [
+                    "varchar",
+                    16,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "dob": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "gender": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "'U'",
+                    ""
+                ]
+            },
+            {
+                "marital_status": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "employee_status": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "employee_type": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "employee_ref": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "id_number": [
+                    "varchar",
+                    32,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "start_date": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "end_date": [
+                    "date",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "contract_signed": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "employee_accounts": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "employee_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "account_number": [
+                    "varchar",
+                    24,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "sort_code": [
+                    "longtext",
+                    4294967295,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "account_name": [
+                    "varchar",
+                    128,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "bank_name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "bank_branch": [
+                    "varchar",
+                    128,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "contracted_hours": [
+                    "double",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "pay_method": [
+                    "longtext",
+                    4294967295,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "notes": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "created_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "updated_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "updated_by_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "broker_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "donor_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "company_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "category": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "category": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "note": [
+                    "longtext",
+                    4294967295,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "note": [
+                    "longtext",
+                    4294967295,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "entityType": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "permissions": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "description": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "description": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "ref_client_case_doc_requirements": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "document_type_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "category": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "rank": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "is_required": [
+                    "tinyint",
+                    null,
+                    "YES",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "min_number": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "ref_document_types": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "category": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "category": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "document_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "document_type": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "description": [
+                    "varchar",
+                    256,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "description": [
+                    "varchar",
+                    256,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "ref_settings": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "prefix": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "prefix": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "keyname": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "keyname": [
+                    "varchar",
+                    32,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "title": [
+                    "varchar",
+                    128,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "title": [
+                    "varchar",
+                    128,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "value": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "value": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "roles": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "permissions": [
+                    "longtext",
+                    4294967295,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "permissions": [
+                    "longtext",
+                    4294967295,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "role_user": [
+            {
+                "user_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "user_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "role_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "role_id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "staff": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "staff_documents": [
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "staff_id": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "users": [
+            {
+                "USER": [
+                    "char",
+                    16,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "id": [
+                    "int",
+                    null,
+                    "NO",
+                    null,
+                    "auto_increment"
+                ]
+            },
+            {
+                "CURRENT_CONNECTIONS": [
+                    "bigint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "first_name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "first_name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "TOTAL_CONNECTIONS": [
+                    "bigint",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "last_name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "last_name": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "email": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "email": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "password": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "password": [
+                    "varchar",
+                    255,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "owner": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "owner": [
+                    "tinyint",
+                    null,
+                    "NO",
+                    "0",
+                    ""
+                ]
+            },
+            {
+                "photo_path": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "photo_path": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "remember_token": [
+                    "varchar",
+                    100,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "remember_token": [
+                    "varchar",
+                    100,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            },
+            {
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ]
+            }
+        ]
     }
-}
+]

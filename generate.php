@@ -52,13 +52,24 @@ return;
 function readDatabase($jsonFilename)
 {
    $dbConn = new DbConn();
-   $dt = new DoctrineTemplate('chesed');
    $tables = $dbConn->getTables();
-   $tableColData = array_map(function ($table) use ($dbConn, $dt) {
+   $tableColData = array_map(function ($table) use ($dbConn) {
       $colData = $dbConn->getColumns($table);
-      return [$table => $dt->filterColumns($colData)];
+      return [$table => filterColumns($colData)];
    }, $tables);
    return json_encode($tableColData, JSON_PRETTY_PRINT);
+}
+
+function filterColumns( $colData) {
+   return array_map( function($col) {
+      return [ $col['COLUMN_NAME'] => [
+         $col['DATA_TYPE'],
+         $col['CHARACTER_MAXIMUM_LENGTH'],
+         $col['IS_NULLABLE'],
+         $col['COLUMN_DEFAULT'],
+         $col['EXTRA']
+         ]];},
+      $colData);
 }
 
 

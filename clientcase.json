@@ -1,0 +1,112 @@
+{
+    "Project": {
+        "Name": "chesedcare",
+        "ProjectRoot": "C:\\Projects\\xyz",
+        "AppRoot": "app",
+        "ResourceRoot": "resources\\js"
+    },
+    "Entities": {
+        "CaseManagement": {
+            "client_case": {
+                "application_date": [
+                    "date",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ],
+                "case_workers": [
+                    "Employee",
+                    null,
+                    null,
+                    null,
+                    "hasMany"
+                ],
+                "notes": [
+                    "Note",
+                    null,
+                    null,
+                    null,
+                    "hasMany"
+                ],
+                "clientCaseDocRequirement": [
+                    "ClientCaseDocRequirement",
+                    null,
+                    null,
+                    null,
+                    "hasMany"
+                ],
+                "ClientCaseDocument": [
+                    "ClientCaseDocument",
+                    null,
+                    null,
+                    null,
+                    "hasMany"
+                ],
+                "reference_number": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ],
+                "language": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ],
+                "referrer": [
+                    "varchar",
+                    255,
+                    "YES",
+                    "NULL",
+                    ""
+                ],
+                "deleted_at": [
+                    "datetime",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ],
+                "clientCaseState": [
+                    "ClientCaseState",
+                    null,
+                    null,
+                    null,
+                    "embed"
+                ],
+                "created_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ],
+                "created_by": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ],
+                "updated_at": [
+                    "datetime",
+                    null,
+                    "NO",
+                    null,
+                    ""
+                ],
+                "updated_by": [
+                    "int",
+                    null,
+                    "YES",
+                    "NULL",
+                    ""
+                ]
+            }
+        }
+    }
+}
